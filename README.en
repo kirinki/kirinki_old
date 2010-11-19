@@ -1,13 +1,16 @@
- REPY -  Ritho's Emacs PYthon
-==============================
+ rstreaming -  Ritho's streaming
+=================================
 
-REPY is an emacs-like text editor written in python. The main features
-of the editor are:
+rstreaming is a streaming server that que permite emitir videos
+en directo desde cualquier sitio con conexion a internet. Las
+características más importantes son:
 
-- Graphical and text based edition.
-- Implementation of Unicode.
-- Extension capability by plugins developed in python.
-- Capability of using several edition modes, even at the same time.
+- Streaming de vídeo desde cualquier parte del mundo con un ancho de
+banda limitado.
+- Grabación de vídeos directamente en la nube, permitiendo un acceso
+inmediato al vídeo recién grabado.
+- Emisión de vídeos almacenados en el portal de manera cíclica, a una
+hora determinada o a una serie de horas.
 
  Copyright
 ===========
@@ -48,7 +51,7 @@ discovered please see the development section in this document.
 =============
 The development of this project use the distributed revision control
 system git, and you can find the repository on
-git://git.ritho.net/repy.git. If you want to colaborate in the
+git://git.ritho.net/rstreaming.git. If you want to colaborate in the
 project, either developing code, writing documentation or any other
 type of task please read first the CONTRIBUTE file and, in case of
-doubt, please contact with repy@ritho.net.
+doubt, please contact with rstreaming@ritho.net.
