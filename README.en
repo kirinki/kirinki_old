@@ -1,16 +1,14 @@
  rstreaming -  Ritho's streaming
 =================================
 
-rstreaming is a streaming server that que permite emitir videos
-en directo desde cualquier sitio con conexion a internet. Las
-características más importantes son:
+rstreaming is a streaming server that allows live video streaming from
+any place with Internet connection. The main features are:
 
-- Streaming de vídeo desde cualquier parte del mundo con un ancho de
-banda limitado.
-- Grabación de vídeos directamente en la nube, permitiendo un acceso
-inmediato al vídeo recién grabado.
-- Emisión de vídeos almacenados en el portal de manera cíclica, a una
-hora determinada o a una serie de horas.
+- Video streaming from any part of the world with a limited broadband.
+- Video recording directly to the net, allowing the access to the
+  video as soon as the video is recorded.
+- Streaming of videos stored in the website in cyclical mode or in one
+  or more predefined time.
 
  Copyright
 ===========

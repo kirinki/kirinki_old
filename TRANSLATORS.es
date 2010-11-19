@@ -1,5 +1,5 @@
- Traductores del Proyecto REPY
-===============================
+ Traductores del proyecto rstreaming
+=====================================
 
 Esta es la lista de los principales desarrolladores del proyecto
 separados por idioma:

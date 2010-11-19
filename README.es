@@ -6,11 +6,11 @@ en directo desde cualquier sitio con conexion a internet. Las
 características más importantes son:
 
 - Streaming de vídeo desde cualquier parte del mundo con un ancho de
-banda limitado.
+  banda limitado.
 - Grabación de vídeos directamente en la nube, permitiendo un acceso
-inmediato al vídeo recién grabado.
+  inmediato al vídeo recién grabado.
 - Emisión de vídeos almacenados en el portal de manera cíclica, a una
-hora determinada o a una serie de horas.
+  hora determinada o a una serie de horas.
 
  Copyright
 ===========
