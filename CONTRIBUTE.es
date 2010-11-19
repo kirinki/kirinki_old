@@ -1,8 +1,8 @@
- Contribuciones al proyecto REPY
-=================================
+ Contribuciones al proyecto rstreaming
+=======================================
 
 Actualmente hay seis vías principales de contribuir al proyecto
-REPY. La primera de ellas es probar el programa e informar de todos
+rstreaming. La primera de ellas es probar el programa e informar de todos
 aquellos errores que se hayan descubierto. Si has descubierto algún
 fallo en el programa y quieres informar de ello, por favor, visita la
 sección Testers de este documento.
@@ -32,7 +32,7 @@ proyecto, por favor, visite la sección de Desarrolladores en este
 documento.
 
 Si encuentra alguna otra forma de colaborar con el proyecto, por
-favor, contacte con repy@ritho.net exponiendo su idea.
+favor, contacte con rstreaming@ritho.net exponiendo su idea.
 
  Testers
 =========
