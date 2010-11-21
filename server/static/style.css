@@ -1,0 +1,86 @@
+html, body {
+    width: 100%;
+}
+
+header {
+    text-align: center;
+}
+
+nav {
+    text-align: left;
+    float: left;
+    width: 100%;
+    height: 18px;
+    border-bottom: 10px solid #def;
+    margin: 0;
+    padding: 0;
+}
+
+nav a{
+    text-decoration: none;
+    color: #00f;
+    padding: 0;
+    margin: 0;
+    background-color: #def;
+    margin-left: 3px;
+    padding: 5px;
+    border-radius: 7px;
+    -webkit-border-radius: 7px;
+    -moz-border-radius: 7px;
+}
+
+article a{
+    text-decoration: none;
+    color: #00f;
+}
+
+section {
+    text-align: justify;
+}
+
+section h1 {
+    text-align: center;
+}
+
+
+.col1 {
+    float: left;
+    width: 23%;
+    padding: 10px;
+    margin: 0;
+}
+
+.col2 {
+    float: left;
+    width: 75%;
+    padding: 0;
+    margin: 0;
+    border-left: 5px solid #def;
+}
+
+.col21 {
+    float: left;
+    width: 60%;
+    padding: 10px;
+    margin: 0;
+}
+
+.col22 {
+    float: right;
+    width: 35%;
+    padding: 10px;
+    margin: 0;
+    border-left: 5px solid #def;
+}
+
+footer {
+    clear: both;
+    float: left;
+    text-align: center;
+    width: 100%;
+    border-top: 3px solid #def;
+}
+
+.floating {
+    cursor: move;
+}

@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import sys
 import gobject, pygst
 pygst.require("0.10")
 import gst
@@ -8,7 +9,7 @@ import sys
 import os
 import readline
 
-REMOTE_HOST = '192.168.33.153'
+REMOTE_HOST = '192.168.1.4'
 WRITE_VIDEO_CAPS = 'video.caps'
 
 mainloop = gobject.MainLoop()

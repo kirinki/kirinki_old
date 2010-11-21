@@ -1,0 +1,41 @@
+$def with (left, center, right, title, css, jquery, javascript)
+$var content_type: text/html
+
+$def tr(values):
+    <tr>
+    $for v in values:
+        <td>$v</td>
+    </tr>
+
+$def table(rows):
+    <table>
+    $for row in rows:
+        $:row
+    </table>
+
+<!DOCTYPE HTML>
+<html>
+<head>
+$if css: <link rel="stylesheet" href="$css" type="text/css" media="screen" charset="utf-8"/>
+$if jquery: <script type="text/javascript" src="$jquery"></script>
+$if javascript: <script type="text/javascript" src="$javascript"></script>
+$if title: <title>$title</title>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>Ritho's Streaming</h1>
+<aside><h2>Emitiendo en directo</h2></aside>
+</hgroup>
+<nav>
+<a href="/">Inicio</a>
+<a href="/about">Sobre Ritho</a>
+</nav>
+</header>
+$:left
+$:center
+$:right
+<footer>&copy; Pablo Alvarez de Sotomayor Posadillo</footer>
+<script type="text/javascript" src="ritho.js"></script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+$def with (title,name)
+
+$var title: $title
+$var content_type: text/html
+
+$# $ name = name+' Apellido'
+
+$if name:
+    I just wanted to say <em>hello</em> to $name. You own me $$50.
+$else:
+    <em>Hello</em>, world!
+
+$# $for i in range(10): 
+$#     I like $i
+
+$# $while a:
+$#     hello $a.pop()
+
+$# $if times > max: 
+$#     Stop! In the name of love. 
+$# $else: 
+$#     Keep on, you can do it.
+
+$# loop.index: the iteration of the loop (1-indexed)
+$# loop.index0: the iteration of the loop (0-indexed)
+$# loop.first: True if first iteration
+$# loop.last: True if last iteration
+$# loop.odd: True if an odd iteration
+$# loop.even: True if an even iteration
+$# loop.parity: "odd" or "even" depending on which is true
+$# loop.parent: the loop above this in nested loops
+
+$# this is a comment
+<form method="post" action="add">
+<p><input type="text" name="name" /> <input type="submit" value="Add"/></p>
+</form>
+
+$# The following will not be html escaped.
+$# $:form.render()
+
+$def tr(values):
+    <tr>
+    $for v in values:
+        <td>$v</td>
+    </tr>
+
+$def table(rows):
+    <table>
+    $for row in rows:
+        $:row
+    </table>
+
+$ data = [['a', 'b', 'c'], [1, 2, 3], [2, 4, 6], [3, 6, 9] ]
+$:table([tr(d) for d in data])
+
+$# $code:
+$#     x = "you can write any python code here"
+$#     y = x.title()
+$#     z = len(x + y)
+$# 
+$#     def limit(s, width=10):
+$#         """limits a string to the given width"""
+$#         if len(s) >= width:
+$#             return s[:width] + "..."
+$#         else:
+$#             return s

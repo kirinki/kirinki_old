@@ -1,0 +1,9 @@
+$def with (blocks)
+
+<div class="col1">
+  $if blocks:
+      $for block in blocks:
+          <section>
+            $:block
+	  </section>
+</div>
