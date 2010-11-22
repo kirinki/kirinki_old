@@ -1,6 +1,7 @@
 DROP TABLE IF EXISTS sessions CASCADE;
 DROP TABLE IF EXISTS usr CASCADE;
 DROP TABLE IF EXISTS video CASCADE;
+DROP TABLE IF EXISTS configs CASCADE;
 
 CREATE TABLE sessions (
     session_id char(128) UNIQUE NOT NULL,
@@ -21,4 +22,9 @@ CREATE TABLE video(
        name VARCHAR(80) NOT NULL,
        format VARCHAR(20) NOT NULL,
        id_owner integer NOT NULL REFERENCES usr(id)
+);
+
+CREATE TABLE configs(
+       cfgkey VARCHAR(50) NOT NULL PRIMARY KEY,
+       cfgvalue VARCHAR(200) NOT NULL
 );

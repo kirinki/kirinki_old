@@ -13,3 +13,9 @@ class database:
 
     def connect():
         self.db = web.database(dbn=self.dbtype, db=self.dbname, user=self.dbuser, pw=self.dbpasswd)
+
+    def __getitem__(self, key):
+        return self.data[key]
+
+    def __setitem__(self, key, value):
+        self.data[key] = value
