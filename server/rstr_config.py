@@ -22,7 +22,19 @@ class config:
     def __init__(self):
         global conf
         self.data = conf
-        self.db = web.database(dbn=conf['dbtype'], db=conf['dbname'], user=conf['dbuser'], pw=conf['dbpasswd'])
+        db = web.database(dbn=conf['dbtype'], db=conf['dbname'], user=conf['dbuser'], pw=conf['dbpasswd'])
+        cfgs = db.select('configs')
+        for cfg in cfgs:
+            self[cfg['cfghey']] = cfg['cfgvalue']
+
+    def save(self):
+        db = web.database(dbn=conf['dbtype'], db=conf['dbname'], user=conf['dbuser'], pw=conf['dbpasswd'])
+        for key:value in data:
+            res = db.query("SELECT key FROM configs WHERE key = '"+value+"'")
+            if res.count() > 0:
+                self.db.update('configs', where='cfgkey = '+key, cfgvalue=value)
+            else:
+                self.db.insert('configs', cfgkey=key, cfgvalue=value)
         
     def __getitem__(self, key):
         return self.data[key]
