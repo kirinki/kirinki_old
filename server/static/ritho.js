@@ -12,6 +12,18 @@ $(document).ready(function() {
 	if(event.which == 1)
 	    $('section').unbind('mousemove',$('section').move());
     });
+
+    $('ul.hmenu li.userMenu').mouseover(
+	function(event) {
+	    $('ul.hmenu li.userMenu ul').css("display","block");
+	}
+    );
+
+    $('ul.hmenu li').mouseleave(
+	function(event) {
+	    $('ul.hmenu li ul').css("display","none");
+	}
+    );
 });
 
 jQuery.fn.move = function() {

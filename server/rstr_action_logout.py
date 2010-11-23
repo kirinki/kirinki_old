@@ -4,14 +4,14 @@ import web
 
 render = web.ctx.session['render']
 
-class logout:
+class Logout:
     def GET(self):
         # blocks = [render.login(usr.login()), render.section(render.article("Title","abstract","content"))]
         # left = render.left(blocks)
         left = render.left({})
         center = render.center()
         right = render.right()
-        return render.index(left, center, right, "Ritho's streaming", "static/style.css", "static/jquery.js", "")
+        return render.index(left, center, right, "Ritho's streaming", "static/style.css", "static/jquery.js", "static/javascript.js")
     def POST(self):
         #if not usr.login().validates(): 
         #    blocks = [render.login(form)]
@@ -22,4 +22,4 @@ class logout:
         left = render.left({})
         center = render.center()
         right = render.right()
-        return render.index(left, center, right, "Ritho's streaming", "static/style.css", "static/jquery.js", "")
+        return render.index(left, center, right, "Ritho's streaming", "static/style.css", "static/jquery.js", "static/javascript.js")

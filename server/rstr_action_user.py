@@ -4,7 +4,7 @@ import web
 
 render = web.ctx.session['render']
 
-class Register:
+class User:
     def GET(self):
         # blocks = [render.login(usr.login()), render.section(render.article("Title","abstract","content"))]
         # left = render.left(blocks)

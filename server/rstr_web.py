@@ -15,11 +15,12 @@ from rstr_config import *
 from rstr_user import *
 
 urls = (
-  '/', 'index',
-  '/about', 'about',
-  '/login', 'login',
-  '/logout', 'logout',
-  '/register','register'
+  '/', 'Index',
+  '/about', 'About',
+  '/user', 'User',
+  '/login', 'Login',
+  '/logout', 'Logout',
+  '/register','Register'
 )
 
 app = web.application(urls, globals())
@@ -54,11 +55,12 @@ if not 'db' in web.ctx.session:
 render = web.template.render('templates/', globals={'user': web.ctx.session['usr']})
 web.ctx.session['render'] = render
 
-from rstr_action_index import *
 from rstr_action_about import *
+from rstr_action_index import *
 from rstr_action_login import *
 from rstr_action_logout import *
 from rstr_action_register import *
+from rstr_action_user import *
 
 application = web.application(urls, globals()).wsgifunc()
 #if __name__ == "__main__": app.run()

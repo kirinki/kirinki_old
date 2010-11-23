@@ -29,7 +29,7 @@ $if title: <title>$title</title>
 </hgroup>
 <ul class="hmenu">
 <li><a href="/">Inicio</a></li>
-<li><a href="/user">Usuario</a>
+<li class="userMenu"><a href="/user">Usuario</a>
 $if not user['logged']:
     <ul>
     <li><a href="/login">Login</a></li>
@@ -47,6 +47,6 @@ $:left
 $:center
 $:right
 <footer>&copy; Pablo Alvarez de Sotomayor Posadillo</footer>
-<script type="text/javascript" src="ritho.js"></script>
+<script type="text/javascript" src="static/ritho.js"></script>
 </body>
 </html>
