@@ -1,8 +1,8 @@
 $def with (form)
 
 <h1>Login</h1>
-<form name="main" method="post"> 
-  $if not form.valid: <p class="error">Prueba de nuevo</p>
+<form action="/login" method="post"> 
+  $if not form.valid: <p class="error">Error al entrar</p>
   $:form.render()
   <input type="submit" />
 </form>

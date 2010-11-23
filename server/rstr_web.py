@@ -8,51 +8,60 @@ sys.path.append(abspath)
 os.chdir(abspath)
 
 import web
-from rstr_init import *
+from web import form
 
-class index:
-    def GET(self):
-        # blocks = [render.login(user.login()), render.section(render.article("Title","abstract","content"))]
-        # left = render.left(blocks)
-        left = render.left({})
-        center = render.center()
-        right = render.right()
-        return render.index(unicode(left), unicode(center), unicode(right), "Ritho's streaming", "static/style.css", "static/jquery.js", "")
-    def POST(self):
-        #if not user.login().validates(): 
-        #    blocks = [render.login(form)]
-        #else:
-        #    blocks = ["Grrreat success! %s is login" % (form['username'].value)]
-        #blocks.append(render.section(render.article("Title","abstract","content")))
-        #left = render.left(blocks)
-        left = render.left({})
-        center = render.center()
-        right = render.right()
-        return render.index(unicode(left), unicode(center), unicode(right), "Ritho's streaming", "static/style.css", "static/jquery.js", "")
+from rstr_database import *
+from rstr_config import *
+from rstr_user import *
 
-class about:
-    def GET(self):
-        #form = login()
-        #blocks = [render.login(form), render.section(render.article("Title","abstract","content"))]
-        #left = render.left(blocks)
-        left = render.left({})
-        center = render.center()
-        right = render.right()
-        return render.index(unicode(left), unicode(center), unicode(right), "Ritho's streaming", "static/style.css", "static/jquery.js", "")
-    def POST(self):
-        #form = login()
-        #if not form.validates(): 
-        #    blocks = [render.login(form)]
-        #else:
-        #    blocks = ["Grrreat success! %s is login" % (form['username'].value)]
-        #blocks.append(render.section(render.article("Title","abstract","content")))
-        #left = render.left(blocks)
-        left = render.left({})
-        center = render.center()
-        right = render.right()
-        return render.index(unicode(left), unicode(center), unicode(right), "Ritho's streaming", "static/style.css", "static/jquery.js", "")
+urls = (
+  '/', 'index',
+  '/about', 'about',
+  '/login', 'login',
+  '/logout', 'logout',
+  '/register','register'
+)
+
+app = web.application(urls, globals())
+
+# Load the session
+if web.config.debug:
+    if web.config.get('_session') is None:
+        conf = config()
+        db = web.database(dbn=conf['dbtype'], db=conf['dbname'], user=conf['dbuser'], pw=conf['dbpasswd'])
+        store = web.session.DBStore(db, 'sessions')
+        web.ctx.session = web.session.Session(app, store, {'cfg' : conf})
+        web.config._session = web.ctx.session
+    else:
+        web.ctx.session = web.config._session
+else:
+    conf = config()
+    db = web.database(dbn=conf['dbtype'], db=conf['dbname'], user=conf['dbuser'], pw=conf['dbpasswd'])
+    store = web.session.DBStore(db, 'sessions')
+    web.ctx.session = web.session.Session(app, store, initializer={'cfg' : conf})
+
+if not 'cfg' in web.ctx.session:
+    web.ctx.session['cfg'] = config()
+if not 'usr' in web.ctx.session:
+    web.ctx.session['usr'] = user()
+if not 'db' in web.ctx.session:
+    cfg = web.ctx.session['cfg']
+    web.ctx.session['db'] = database(cfg['dbtype'],
+                                     cfg['dbname'],
+                                     cfg['dbuser'],
+                                     cfg['dbpasswd'])
+
+render = web.template.render('/home/i02sopop/desarrollo/rstreaming/server/templates/', globals={'context': web.ctx.session})
+web.ctx.session['render'] = render
+
+from rstr_action_index import *
+from rstr_action_about import *
+from rstr_action_login import *
+from rstr_action_logout import *
+from rstr_action_register import *
 
 application = web.application(urls, globals()).wsgifunc()
+#if __name__ == "__main__": app.run()
 
 # db = web.database(dbn='postgres', user='username', pw='password', db='dbname')
 # todos = db.select('todo')

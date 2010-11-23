@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import web
-from rstr_config import *
 
 class database:
     """ Database class """

@@ -37,3 +37,5 @@ CREATE TABLE configs(
        cfgkey VARCHAR(50) NOT NULL PRIMARY KEY,
        cfgvalue VARCHAR(200) NOT NULL
 );
+
+insert into configs values('default_url','http://localhost');
