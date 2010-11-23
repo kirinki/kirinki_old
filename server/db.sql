@@ -9,12 +9,20 @@ CREATE TABLE sessions (
     data text
 );
 
+CREATE TYPE usrType(
+       id serial NOT NULL PRIMARY KEY,
+       tName VARCHAR(50) NOT NULL UNIQUE,
+       tDescription VARCHAR(200)
+);
+
 CREATE TABLE usr (
        id serial NOT NULL PRIMARY KEY,
        username VARCHAR(50) NOT NULL UNIQUE,
        password VARCHAR(50) NOT NULL,
        name VARCHAR(50),
-       surname VARCHAR(50)
+       surname VARCHAR(50),
+       email VARCHAR(50),
+       usrType integer NOT NULL REFERENCES usrType(id)
 );
 
 CREATE TABLE video(
