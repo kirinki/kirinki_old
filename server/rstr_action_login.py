@@ -7,20 +7,18 @@ usr = web.ctx.session['usr']
 
 class login:
     def GET(self):
-        blocks = [render.login(usr.loginForm()), render.section(render.article("Title","abstract","content"))]
+        blocks = [render.login(usr.loginForm())]
         left = render.left(blocks)
-        # left = render.left({})
         center = render.center()
         right = render.right()
         return render.index(left, center, right, "Ritho's streaming", "static/style.css", "static/jquery.js", "")
     def POST(self):
-        #if not usr.login().validates(): 
-        #    blocks = [render.login(form)]
-        #else:
-        #    blocks = ["Grrreat success! %s is login" % (form['username'].value)]
+        if not usr.loginForm().validates(): 
+            blocks = [render.login(usr.lForm)]
+        else:
+            blocks = ["Grrreat success! %s is login" % (usr.lForm['username'].value)]
         #blocks.append(render.section(render.article("Title","abstract","content")))
-        #left = render.left(blocks)
-        left = render.left({})
+        left = render.left(blocks)
         center = render.center()
         right = render.right()
         return render.index(left, center, right, "Ritho's streaming", "static/style.css", "static/jquery.js", "")

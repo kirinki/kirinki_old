@@ -51,7 +51,7 @@ if not 'db' in web.ctx.session:
                                      cfg['dbuser'],
                                      cfg['dbpasswd'])
 
-render = web.template.render('/home/i02sopop/desarrollo/rstreaming/server/templates/', globals={'context': web.ctx.session})
+render = web.template.render('templates/', globals={'user': web.ctx.session['usr']})
 web.ctx.session['render'] = render
 
 from rstr_action_index import *

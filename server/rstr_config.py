@@ -2,7 +2,7 @@
 
 import web
 
-web.config.debug = True
+web.config.debug = False
 conf = {'dbtype' : 'postgres',
         'dbhost' : 'localhost',
         'dbname' : 'rstreaming',

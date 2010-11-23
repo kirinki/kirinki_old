@@ -27,10 +27,21 @@ $if title: <title>$title</title>
 <h1>Ritho's Streaming</h1>
 <aside><h2>Emitiendo en directo</h2></aside>
 </hgroup>
-<nav>
-<a href="/">Inicio</a>
-<a href="/about">Sobre Ritho</a>
-</nav>
+<ul class="hmenu">
+<li><a href="/">Inicio</a></li>
+<li><a href="/user">Usuario</a>
+$if not user['logged']:
+    <ul>
+    <li><a href="/login">Login</a></li>
+    <li><a href="/register">Registro</a></li>
+    </ul>
+$else:
+    <ul>
+    <li><a href="/logout">Logout</a></li>
+    </ul>
+</li>
+<li><a href="/about">Sobre Ritho</a></li>
+</ul>
 </header>
 $:left
 $:center

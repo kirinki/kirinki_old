@@ -6,7 +6,7 @@ header {
     text-align: center;
 }
 
-nav {
+ul.hmenu {
     text-align: left;
     float: left;
     width: 100%;
@@ -14,9 +14,16 @@ nav {
     border-bottom: 10px solid #def;
     margin: 0;
     padding: 0;
+    list-style: none;
+    display: table-row;
+    list-style: none;
 }
 
-nav a{
+ul.hmenu li {
+    display: table-cell;
+}
+
+ul.hmenu li a {
     text-decoration: none;
     color: #00f;
     padding: 0;
@@ -27,6 +34,39 @@ nav a{
     border-radius: 7px;
     -webkit-border-radius: 7px;
     -moz-border-radius: 7px;
+}
+
+ul.hmenu li ul {
+    display: none;
+    list-style: none;
+    position: absolute;
+    text-align: center;
+    left: auto;
+    padding: 0;
+    margin: 0;
+    background-color: #def;
+    border-radius: 7px;
+    -webkit-border-radius: 7px;
+    -moz-border-radius: 7px;
+}
+
+ul.hmenu li ul li {
+    display: block;
+    width: 100%;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    padding-right: 2px;
+}
+
+ul.hmenu li ul li a {
+    text-decoration: none;
+    color: #00f;
+    padding: 0;
+    margin: 5px;
+    border-radius: 0;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    background: none;
 }
 
 article a{
