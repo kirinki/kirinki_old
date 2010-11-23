@@ -1,6 +1,7 @@
 DROP TABLE IF EXISTS sessions CASCADE;
-DROP TABLE IF EXISTS usr CASCADE;
 DROP TABLE IF EXISTS video CASCADE;
+DROP TABLE IF EXISTS usr CASCADE;
+DROP TABLE IF EXISTS usrType CASCADE;
 DROP TABLE IF EXISTS configs CASCADE;
 
 CREATE TABLE sessions (
@@ -9,27 +10,27 @@ CREATE TABLE sessions (
     data text
 );
 
-CREATE TYPE usrType(
-       id serial NOT NULL PRIMARY KEY,
+CREATE TABLE usrType (
+       idType serial NOT NULL PRIMARY KEY,
        tName VARCHAR(50) NOT NULL UNIQUE,
        tDescription VARCHAR(200)
 );
 
 CREATE TABLE usr (
-       id serial NOT NULL PRIMARY KEY,
+       idUsr serial NOT NULL PRIMARY KEY,
        username VARCHAR(50) NOT NULL UNIQUE,
        password VARCHAR(50) NOT NULL,
        name VARCHAR(50),
        surname VARCHAR(50),
        email VARCHAR(50),
-       usrType integer NOT NULL REFERENCES usrType(id)
+       usrType integer NOT NULL REFERENCES usrType(idType)
 );
 
 CREATE TABLE video(
-       id serial NOT NULL PRIMARY KEY,
+       idVideo serial NOT NULL PRIMARY KEY,
        name VARCHAR(80) NOT NULL,
        format VARCHAR(20) NOT NULL,
-       id_owner integer NOT NULL REFERENCES usr(id)
+       id_owner integer NOT NULL REFERENCES usr(idUsr)
 );
 
 CREATE TABLE configs(

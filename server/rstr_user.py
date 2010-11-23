@@ -5,7 +5,7 @@ from web import form
 class user:
     """User class"""
     def __init__(self):
-        self.data = {'username' : '', 'password' : '', 'name' : '', 'surname' : '', 'videos' : [] }
+        self.data = {'username' : '', 'password' : '', 'name' : '', 'surname' : '', 'email' : '', 'videos' : [], 'userType' : 1 }
         register = form.Form(form.Textbox('username'),
                              form.Password('password'),
                              form.Password('password_again'),
