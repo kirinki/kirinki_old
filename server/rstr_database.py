@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
+__license__ = "GNU General Public License, Ver.3"
+__author__ = "Pablo Alvarez de Sotomayor Posadillo"
 
 import web
 
@@ -9,9 +12,10 @@ class database:
         self.dbname = dbname
         self.dbusr = dbusr
         self.dbpasswd = dbpasswd
+        self.connect()
 
-    def connect():
-        self.db = web.database(dbn=self.dbtype, db=self.dbname, user=self.dbuser, pw=self.dbpasswd)
+    def connect(self):
+        self.db = web.database(dbn=self.dbtype, db=self.dbname, user=self.dbusr, pw=self.dbpasswd)
 
     def __getitem__(self, key):
         return self.data[key]

@@ -1,7 +1,13 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
+__license__ = "GNU General Public License, Ver.3"
+__author__ = "Pablo Alvarez de Sotomayor Posadillo"
 
+import logging
 import web
 from web import form
+
+from rstr_config import conf
 
 class user:
     """User class"""
@@ -11,21 +17,26 @@ class user:
     def checkUsername(self,user):
         return True
 
-    def login(self,data):
-        db = web.ctx.session['db']
-        ident = db.query("select * from usr where username = '%s'" % (data.username)).getresult()
-        if data.password == ident[0][2]:
-            self.id = ident[0][0]
-            self.username = ident[0][1]
-            self.password = ident[0][2]
-            self.name = ident[0][3]
-            self.surname = ident[0][4]
-            self.email = ident[0][5]
-            self.userType = ident[0][6]
+    def login(self, user, passwd):
+        logging.debug('data: 0')
+        db = web.database(host=conf['dbhost'],dbn=conf['dbtype'], db=conf['dbname'], user=conf['dbuser'], pw=conf['dbpasswd'])
+        logging.debug('data: 1')
+        myvar = dict(username=user)
+        ident = db.select('usr', myvar, where="username = $username")
+        results = ident[0]
+        logging.debug(results)
+        if passwd == results['password']:
+            self.id = results['idusr']
+            self.username = results['username']
+            self.password = results['password']
+            self.name = results['name']
+            self.surname = results['surname']
+            self.email = results['email']
+            self.userType = results['usrtype']
             self.logged = True
             usrVideos = db.query("select id from video where id_owner = '%d'" % (self.id)).getresult()
-            for idVideo in usrVideos:
-                self.videos.append(video(idVideo[0]))
+            #for idVideo in usrVideos:
+                #self.videos.append(video(idVideo[0]))
             return True
         return False
 
@@ -33,8 +44,7 @@ class user:
         login = form.Form(form.Textbox('username'),
                           form.Password('password'),
                           validators = [form.Validator("Debe de ingresar el usuario.", lambda i: i.username is not None and i.username != ''),
-                                        form.Validator("Debe de ingresar la contrasena.", lambda i: i.password is not None and i.password != ''),
-                                        form.Validator("Usuario o contrasena incorrectos.", lambda i: session['usr'].login(i))])
+                                        form.Validator("Debe de ingresar la contrasena.", lambda i: i.password is not None and i.password != '')])
         self.lForm = login()
         return self.lForm
         

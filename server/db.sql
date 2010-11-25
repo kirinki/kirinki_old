@@ -39,3 +39,8 @@ CREATE TABLE configs(
 );
 
 insert into configs values('default_url','http://localhost');
+insert into configs values('logfile','/var/log/rstreaming.log');
+insert into usrType values(0,'Anonymous','Anonymous user');
+insert into usrType values(1,'User','Regular user');
+insert into usrType values(2,'Administrator','Site administrator');
+insert into usr values(1,'palvarez','3lPu70Am0','Pablo','Alvarez de Sotomayor Posadillo','palvarez@ritho.net',2);

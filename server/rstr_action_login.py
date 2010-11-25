@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
+__license__ = "GNU General Public License, Ver.3"
+__author__ = "Pablo Alvarez de Sotomayor Posadillo"
 
 import web
 
@@ -16,7 +19,10 @@ class Login:
         if not usr.loginForm().validates(): 
             blocks = [render.login(usr.lForm)]
         else:
-            blocks = ["Grrreat success! %s is login" % (usr.lForm['username'].value)]
+            if not usr.login(usr.lForm['username'].value, usr.lForm['password'].value):
+                blocks = ["Error. Usuario o contrasena incorrectos", render.login(usr.lForm)]
+            else:
+                blocks = [render.article("Title","abstract","content")]
         #blocks.append(render.section(render.article("Title","abstract","content")))
         left = render.left(blocks)
         center = render.center()
