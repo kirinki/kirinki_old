@@ -16,8 +16,7 @@ mainloop = gobject.MainLoop()
 pipeline = gst.Pipeline('server')
 bus = pipeline.get_bus()
 
-dv1394src = gst.element_factory_make("dv1394src", "dv1394src")
-dvdemux = gst.element_factory_make("dvdemux", "dvdemux")
+videosrc = gst.element_factory_make("v4l2src", "v4l2src") 
 q1 = gst.element_factory_make("queue", "q1")
 q2 = gst.element_factory_make("queue", "q2")
 dvdec = gst.element_factory_make("dvdec", "dvdec")
@@ -31,28 +30,20 @@ x264enc.set_property('qp-min', 18)
 rtph264pay = gst.element_factory_make("rtph264pay", "rtph264pay")
 udpsink_rtpout = gst.element_factory_make("udpsink", "udpsink0")
 udpsink_rtpout.set_property('host', REMOTE_HOST)
-udpsink_rtpout.set_property('port', 10000)
+udpsink_rtpout.set_property('port', 9000)
 udpsink_rtcpout = gst.element_factory_make("udpsink", "udpsink1")
 udpsink_rtcpout.set_property('host', REMOTE_HOST)
-udpsink_rtcpout.set_property('port', 10001)
+udpsink_rtcpout.set_property('port', 9001)
 udpsrc_rtcpin = gst.element_factory_make("udpsrc", "udpsrc0")
-udpsrc_rtcpin.set_property('port', 10002)
+udpsrc_rtcpin.set_property('port', 9002)
 
 rtpbin = gst.element_factory_make('gstrtpbin', 'gstrtpbin')
 
 # Add elements
-pipeline.add(dv1394src, dvdemux, q1, dvdec, videoscale, ffmpegcs, capsfilter, x264enc, rtph264pay, rtpbin, udpsink_rtpout, udpsink_rtcpout, udpsrc_rtcpin)
+pipeline.add(videosrc, q1, dvdec, videoscale, ffmpegcs, capsfilter, x264enc, rtph264pay, rtpbin, udpsink_rtpout, udpsink_rtcpout, udpsrc_rtcpin)
 
-# Link them
-dv1394src.link(dvdemux)
-def dvdemux_padded(dbin, pad):
-    print "dvdemux got pad %s" % pad.get_name()
-    if pad.get_name() == 'video':
-        print "Linking dvdemux to queue1"
-        dvdemux.link(q1)
-
-# Create links
-dvdemux.connect('pad-added', dvdemux_padded)
+# print "Linking src to queue1"
+# videosrc.link(q1)
 
 gst.element_link_many(q1, dvdec, videoscale, capsfilter, ffmpegcs, x264enc, rtph264pay)
 

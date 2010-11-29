@@ -10,6 +10,9 @@ LOCAL_PORT = 9000
 
 pipeline = gst.Pipeline('server')
 
+rtpbin = gst.element_factory_make('gstrtpbin', 'rtpbin')
+rtpbin.set_property('latency', 400)
+
 tcpserversrc_audio = gst.element_factory_make('tcpserversrc', 'src0')
 tcpserversrc_audio.set_property('host', LOCAL_HOST)
 tcpserversrc_audio.set_property('port', LOCAL_PORT)
@@ -32,6 +35,7 @@ caps1.set_property('caps', gst.caps_from_string('video/x-raw-yuv, width=640, hei
 caps2 = gst.element_factory_make("capsfilter", "caps2")
 caps2.set_property('caps', gst.caps_from_string('audio/x-raw-int, endianness=(int)1234, signed=(boolean)true, width=(int)16, depth=(int)16, rate=(int)44100, channels=(int)2'))
 
+rtptheoradepay = gst.element_factory_make('rtptheoradepay', 'rtpdepay')
 audioconvert = gst.element_factory_make("audioconvert")
 ffmpegcs = gst.element_factory_make("ffmpegcolorspace", "ffmpegcs")
 # vorbisdec = gst.element_factory_make('vorbisdec')
@@ -46,9 +50,10 @@ theoraenc = gst.element_factory_make('theoraenc', 'theoraenc0')
 audiosink = gst.element_factory_make('alsasink', 'sink0')
 videosink = gst.element_factory_make('xvimagesink', 'sink1')
 
-pipeline.add(tcpserversrc_video, caps1, q3, ffmpegcs, theoraenc, q4, tcpserversrc_audio, caps2, q1, audioconvert, caps0, q2, vorbisenc, audiosink, videosink)
-gst.element_link_many(tcpserversrc_audio, caps2, q1, audioconvert, caps0, q2, audiosink)
-gst.element_link_many(tcpserversrc_video, q3, ffmpegcs, caps1, q4, videosink)
+pipeline.add(rtpbin, tcpserversrc_video, caps1, q3, ffmpegcs, theoraenc, rtptheoradepay, q4, tcpserversrc_audio, caps2, q1, audioconvert, caps0, q2, vorbisenc, audiosink, videosink)
+gst.element_link_many(tcpserversrc_audio, caps2, q1, audioconvert, caps0, audiosink)
+# gst.element_link_many(tcpserversrc_video, q3, ffmpegcs, caps1, videosink)
+
 
 # pipeline.add(tcpserversrc_video, q3, theoradec, ffmpegcs, theoraenc, q4, tcpserversrc_audio, q1, vorbisdec, audioconvert, q2, vorbisenc, oggmux, filesink)
 # gst.element_link_many(tcpserversrc_audio, q1, vorbisdec, audioconvert, q2, vorbisenc, oggmux)
