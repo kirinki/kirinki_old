@@ -1,0 +1,13 @@
+{% load i18n %}
+{% load cache %}
+{% get_current_language as LANGUAGE_CODE %}
+
+<h1>Login</h1>
+<form action="{{ session.base_url }}/login" method="post">
+  {% if session.error %}
+  <p class="error">{{ session.error }}</p>
+  {% endif %}
+  Login: <input type="text" name="username">
+  Password: <input type="password" name="password">
+  <input type="submit" />
+</form>

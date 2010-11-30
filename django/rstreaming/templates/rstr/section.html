@@ -1,0 +1,11 @@
+{% load i18n %}
+{% load cache %}
+{% get_current_language as LANGUAGE_CODE %}
+
+<section>
+  {% if content %}
+  {% autoescape off %}
+  {{ content }}
+  {% endautoescape %}
+  {% endif %}
+</section>

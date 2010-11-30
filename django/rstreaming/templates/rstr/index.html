@@ -1,0 +1,77 @@
+{% load i18n %}
+{% load cache %}
+{% get_current_language as LANGUAGE_CODE %}
+<!DOCTYPE HTML>
+<html>
+<head>
+{% cache 600 head LANGUAGE_CODE %}
+{% if session.css_file %}
+<link rel="stylesheet" href="{{ session.base_url }}/static/{{ session.css_file }}" type="text/css" media="screen" charset="utf-8"/>
+{% endif %}
+{% if session.jquery_src %}
+<script type="text/javascript" src="{{ session.base_url }}/static/{{ session.jquery_src }}"></script>
+{% endif %}
+{% if session.javascript_file %}
+<script type="text/javascript" src="{{ session.base_url }}/static/{{ session.javascript_file }}"></script>
+{% endif %}
+{% endcache %}
+{% if session.title %}
+<title>{{ session.title }}</title>
+{% endif %}
+</head>
+<body>
+<header>
+{% cache 600 header_title LANGUAGE_CODE %}
+<hgroup>
+{% if session.title %}
+<h1>{{ session.title }}</h1>
+{% endif %}
+{% if session.subtitle %}
+<aside><h2>{{ session.subtitle }}</h2></aside>
+{% endif %}
+{% endcache %}
+</hgroup>
+<ul class="hmenu">
+<li><a href="{{ session.base_url }}">Inicio</a></li>
+<li class="userMenu"><a href="{{ session.base_url }}/user">Usuario</a>
+{% if not logged %}
+    <ul>
+    <li><a href="{{ session.base_url }}/login">Login</a></li>
+    <li><a href="{{ session.base_url }}/register">Registro</a></li>
+    </ul>
+{% else %}
+    <ul>
+    <li><a href="{{ session.base_url }}/logout">Logout</a></li>
+    </ul>
+{% endif %}
+</li>
+<li><a href="{{ session.base_url }}/about">Sobre Ritho</a></li>
+</ul>
+</header>
+{% if leftCol %}
+{% autoescape off %}
+{{ leftCol }}
+{% endautoescape %}
+{% endif %}
+{% if centerCol %}
+{% autoescape off %}
+{{ centerCol }}
+{% endautoescape %}
+{% endif %}
+{% if rightCol %}
+{% autoescape off %}
+{{ rightCol }}
+{% endautoescape %}
+{% endif %}
+<footer>
+{% if copy %}
+{% autoescape off %}
+{{ copy }}
+{% endautoescape %}
+{% endif %}
+</footer>
+{% if session.jquery_file %}
+<script type="text/javascript" src="{{ session.base_url }}/static/{{ session.jquery_file }}"></script>
+{% endif %}
+</body>
+</html>
