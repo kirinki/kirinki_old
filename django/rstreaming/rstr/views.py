@@ -42,6 +42,7 @@ def index(request):
     # p = get_object_or_404(Poll, pk=poll_id)
 
 def auth_login(request):
+    logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -50,6 +51,7 @@ def auth_login(request):
             if user.is_active:
                 login(request, user)
                 # Redirect to a success page.
+                logging.debug(request.HTTP_REFERER)
                 return HttpResponse("You're logged in.")
             else:
                 # Return a 'disabled account' error message
