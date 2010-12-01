@@ -21,6 +21,11 @@
 </head>
 <body>
 <header>
+{% if messages %}
+{% for message in messages %}
+<p {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</p>
+{% endfor %}
+{% endif %}
 {% cache 600 header_title LANGUAGE_CODE %}
 <hgroup>
 {% if session.title %}
@@ -34,7 +39,7 @@
 <ul class="hmenu">
 <li><a href="{{ session.base_url }}">Inicio</a></li>
 <li class="userMenu"><a href="{{ session.base_url }}/user">Usuario</a>
-{% if not logged %}
+{% if not session.user.is_authenticated %}
     <ul>
     <li><a href="{{ session.base_url }}/login">Login</a></li>
     <li><a href="{{ session.base_url }}/register">Registro</a></li>

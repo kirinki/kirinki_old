@@ -1,4 +1,3 @@
-import sys
 from django.core.cache import cache
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.sessions.models import Session
@@ -8,6 +7,7 @@ import logging
 class Config:
     def __init__(self, key):
         logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
+
         if not cache.get('numUsers', False):
             cache.set('numUsers', 1)
         else:

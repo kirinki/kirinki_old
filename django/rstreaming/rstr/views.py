@@ -1,69 +1,87 @@
-from django.shortcuts import render_to_response
-from django.template.loader import render_to_string
 # from django.views.decorators.vary import vary_on_headers
 from django.views.decorators.vary import vary_on_cookie
 # from django.views.decorators.cache import cache_control
-# from django.views.decorators.cache import never_cache
+from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
-from django.template import RequestContext
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.contrib.auth import login
+from django.contrib.auth import logout
 from django.http import HttpResponseRedirect
 from django.http import HttpResponse
-from django.contrib.sessions.models import Session
+from django.core.urlresolvers import reverse
+from django.contrib import messages
 from rstr.config import Config
+from rstr.mainviewer import MainViewer
 import logging
 
 # @vary_on_header s('Cookie')
 # @cache_control(private=True, must_revalidate=True, max_age=3600)
-# @never_cache
+@never_cache
 @vary_on_cookie
 def index(request):
     logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
-    # request.session.clear()
+    messages.set_level(request, messages.INFO)
+    request.session.clear()
     if request.session.get('isConfig', False) is False:
         request.session.set_expiry(600)
         data = Config(request.session.session_key).getSessionData()
-        request.session = data
-
-    login = render_to_string('rstr/login.html', {'session' : request.session}, context_instance=RequestContext(request))
-    leftCol = render_to_string('rstr/left.html', {'blocks' : [login]})
-    centerCol = render_to_string('rstr/center.html', {})
-    rightCol = render_to_string('rstr/right.html', {})
-    return render_to_response('rstr/index.html', {'logged' : request.session.get('logged', False),
-                                                  'copy' : '&copy; Pablo Alvarez de Sotomayor Posadillo',
-                                                  'session' : request.session,
-                                                  'leftCol' : leftCol,
-                                                  'centerCol' : centerCol,
-                                                  'rightCol' : rightCol})
+        request.session.update(data)
+    return MainViewer(request, request.session.session_key).getViewer()
 
 # def error(request):
     # p = get_object_or_404(Poll, pk=poll_id)
 
 def auth_login(request):
-    logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
     if request.method == 'POST':
+        if request.session['user'].is_authenticated():
+            messages.add_message(request, messages.ERROR, 'User already logged in')
+            if request.META['HTTP_REFERER'] is not None:
+                return HttpResponseRedirect(request.META['HTTP_REFERER'])
+            else:
+                return HttpResponse(reverse('index'))
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(username=username, password=password)
         if user is not None:
             if user.is_active:
                 login(request, user)
-                # Redirect to a success page.
-                logging.debug(request.HTTP_REFERER)
-                return HttpResponse("You're logged in.")
+                messages.add_message(request, messages.INFO, 'User logged in')
+                request.session['user'] = user
+                if request.META['HTTP_REFERER'] is not None:
+                    return HttpResponseRedirect(request.META['HTTP_REFERER'])
+                else:
+                    return HttpResponse(reverse('index'))
             else:
                 # Return a 'disabled account' error message
-                return HttpResponse("Your account is disabled.")
+                messages.add_message(request, messages.ERROR, 'Your account is disabled.')
+                if request.META['HTTP_REFERER'] is not None:
+                    return HttpResponseRedirect(request.META['HTTP_REFERER'])
+                else:
+                    return HttpResponse(reverse('index'))
         else:
             # Return an 'invalid login' error message.
-            return HttpResponse("Username or password error.")
+            messages.add_message(request, messages.ERROR, 'Username or password error.')
+            if request.META['HTTP_REFERER'] is not None:
+                return HttpResponseRedirect(request.META['HTTP_REFERER'])
+            else:
+                return HttpResponse(reverse('index'))
     elif request.method == 'GET':
         return HttpResponse("Login.")
     else:
         raise Http404
 
 def auth_logout(request):
-    logout(request)
-    return HttpResponse("You're logged out.")
+    if request.session['user'].is_authenticated():
+        logout(request)
+        messages.add_message(request, messages.INFO, 'User logged out.')
+        if request.META['HTTP_REFERER'] is not None:
+            return HttpResponseRedirect(request.META['HTTP_REFERER'])
+        else:
+            return HttpResponse(reverse('index'))
+    else:
+        messages.add_message(request, messages.ERROR, 'User not logged in.')
+        if request.META['HTTP_REFERER'] is not None:
+            return HttpResponseRedirect(request.META['HTTP_REFERER'])
+        else:
+            return HttpResponse(reverse('index'))
