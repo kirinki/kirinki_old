@@ -10,22 +10,29 @@ class MainViewer:
         logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
 
         s = Session.objects.get(pk=key)
-        session_data = s.get_decoded()
+        self.session_data = s.get_decoded()
+        self.request = req
 
-        blocks = []
-        if not session_data['user'].is_authenticated():
-            blocks = [render_to_string('rstr/login.html', {'session' : session_data}, context_instance=RequestContext(req))]
-        leftCol = render_to_string('rstr/left.html', {'blocks' : blocks})
-        centerCol = render_to_string('rstr/center.html', {})
-        rightCol = render_to_string('rstr/right.html', {})
         self.page = render_to_response('rstr/index.html', {'copy' : '&copy; Pablo Alvarez de Sotomayor Posadillo',
-                                                           'session' : session_data,
-                                                           'leftCol' : leftCol,
-                                                           'centerCol' : centerCol,
-                                                           'rightCol' : rightCol}, context_instance=RequestContext(req))
+                                                           'session' : self.session_data,
+                                                           'leftCol' : self.getLeftCol(),
+                                                           'centerCol' : self.getCenterCol(),
+                                                           'rightCol' : self.getRightCol()}, context_instance=RequestContext(self.request))
 
-        s.session_data=Session.objects.encode(session_data)
+        s.session_data=Session.objects.encode(self.session_data)
         s.save()
         
     def getViewer(self):
         return self.page
+
+    def getLeftCol(self):
+        blocks = []
+        if not self.session_data['user'].is_authenticated():
+            blocks = [render_to_string('rstr/login.html', {'session' : self.session_data}, context_instance=RequestContext(self.request))]
+        return render_to_string('rstr/left.html', {'blocks' : blocks})
+
+    def getCenterCol(self):
+        return render_to_string('rstr/center.html', {})
+
+    def getRightCol(self):
+        return render_to_string('rstr/right.html', {})

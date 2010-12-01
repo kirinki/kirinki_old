@@ -11,6 +11,7 @@ from django.http import HttpResponseRedirect
 from django.http import HttpResponse
 from django.core.urlresolvers import reverse
 from django.contrib import messages
+from django.contrib.auth.decorators import user_passes_test
 from rstr.config import Config
 from rstr.mainviewer import MainViewer
 import logging
@@ -22,16 +23,17 @@ import logging
 def index(request):
     logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
     messages.set_level(request, messages.INFO)
-    request.session.clear()
+    if request.GET.get('next', False) is not False:
+        messages.add_message(request, messages.ERROR, 'La pagina %s no se puede visitar'%request.GET['next'])
+    # request.session.clear()
     if request.session.get('isConfig', False) is False:
         request.session.set_expiry(600)
         data = Config(request.session.session_key).getSessionData()
         request.session.update(data)
+        request.session['isConfig'] = True
     return MainViewer(request, request.session.session_key).getViewer()
 
-# def error(request):
-    # p = get_object_or_404(Poll, pk=poll_id)
-
+@user_passes_test(lambda u: u.is_anonymous(),'index')
 def auth_login(request):
     if request.method == 'POST':
         if request.session['user'].is_authenticated():
@@ -67,10 +69,18 @@ def auth_login(request):
             else:
                 return HttpResponse(reverse('index'))
     elif request.method == 'GET':
-        return HttpResponse("Login.")
+        logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
+        messages.set_level(request, messages.INFO)
+        if request.session.get('isConfig', False) is False:
+            request.session.set_expiry(600)
+            data = Config(request.session.session_key).getSessionData()
+            request.session.update(data)
+            request.session['isConfig'] = True
+        return MainViewer(request, request.session.session_key).getViewer()
     else:
         raise Http404
 
+@user_passes_test(lambda u: u.is_authenticated(),'index')
 def auth_logout(request):
     if request.session['user'].is_authenticated():
         logout(request)
@@ -85,3 +95,24 @@ def auth_logout(request):
             return HttpResponseRedirect(request.META['HTTP_REFERER'])
         else:
             return HttpResponse(reverse('index'))
+
+def about(request):
+    logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
+    messages.set_level(request, messages.INFO)
+    if request.session.get('isConfig', False) is False:
+        request.session.set_expiry(600)
+        data = Config(request.session.session_key).getSessionData()
+        request.session.update(data)
+        request.session['isConfig'] = True
+    return MainViewer(request, request.session.session_key).getViewer()
+
+@user_passes_test(lambda u: u.is_anonymous(),'index')
+def reg(request):
+    logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
+    messages.set_level(request, messages.INFO)
+    if request.session.get('isConfig', False) is False:
+        request.session.set_expiry(600)
+        data = Config(request.session.session_key).getSessionData()
+        request.session.update(data)
+        request.session['isConfig'] = True
+    return MainViewer(request, request.session.session_key).getViewer()
