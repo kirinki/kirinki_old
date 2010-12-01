@@ -12,17 +12,13 @@ class MainViewer:
         s = Session.objects.get(pk=key)
         self.session_data = s.get_decoded()
         self.request = req
-
+        
+    def getViewer(self, page):
         self.page = render_to_response('rstr/index.html', {'copy' : '&copy; Pablo Alvarez de Sotomayor Posadillo',
                                                            'session' : self.session_data,
                                                            'leftCol' : self.getLeftCol(),
                                                            'centerCol' : self.getCenterCol(),
                                                            'rightCol' : self.getRightCol()}, context_instance=RequestContext(self.request))
-
-        s.session_data=Session.objects.encode(self.session_data)
-        s.save()
-        
-    def getViewer(self):
         return self.page
 
     def getLeftCol(self):

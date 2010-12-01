@@ -31,7 +31,7 @@ def index(request):
         data = Config(request.session.session_key).getSessionData()
         request.session.update(data)
         request.session['isConfig'] = True
-    return MainViewer(request, request.session.session_key).getViewer()
+    return MainViewer(request, request.session.session_key).getViewer('index')
 
 @user_passes_test(lambda u: u.is_anonymous(),'index')
 def auth_login(request):
@@ -76,7 +76,7 @@ def auth_login(request):
             data = Config(request.session.session_key).getSessionData()
             request.session.update(data)
             request.session['isConfig'] = True
-        return MainViewer(request, request.session.session_key).getViewer()
+        return MainViewer(request, request.session.session_key).getViewer('login')
     else:
         raise Http404
 
@@ -104,7 +104,7 @@ def about(request):
         data = Config(request.session.session_key).getSessionData()
         request.session.update(data)
         request.session['isConfig'] = True
-    return MainViewer(request, request.session.session_key).getViewer()
+    return MainViewer(request, request.session.session_key).getViewer('about')
 
 @user_passes_test(lambda u: u.is_anonymous(),'index')
 def reg(request):
@@ -115,4 +115,4 @@ def reg(request):
         data = Config(request.session.session_key).getSessionData()
         request.session.update(data)
         request.session['isConfig'] = True
-    return MainViewer(request, request.session.session_key).getViewer()
+    return MainViewer(request, request.session.session_key).getViewer('register')
