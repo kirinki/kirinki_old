@@ -9,6 +9,11 @@ urlpatterns = patterns('rstr.views',
                        (r'^logout/*$', 'auth_logout'),
                        (r'^about/*$', 'about'),
                        (r'^register/*$', 'reg'),
+                       (r'^streaming/*$', 'streaming'),
+                       (r'^videos/*$', 'videos'),
+                       (r'^stream/*$', 'stream'),
+                       (r'^upload/*$', 'upload'),
+                       (r'^admin/*$', 'admin'),
                        # (r'^/*$', cache_page('index',60*5)), # Vista cacheada 5 minutos
                        # (r'^$(?P<parametro>\d+)/$', 'index'),
                        )

@@ -37,20 +37,27 @@
 {% endcache %}
 </hgroup>
 <ul class="hmenu">
-<li><a href="{{ session.base_url }}">Inicio</a></li>
-<li class="userMenu"><a href="{{ session.base_url }}/user">Usuario</a>
-{% if not session.user.is_authenticated %}
+  <li><a href="{{ session.base_url }}">Inicio</a></li>
+  <li><a href="{{ session.base_url }}/streaming">En directo</a></li>
+  <li><a href="{{ session.base_url }}/videos">Videos antiguos</a></li>
+  <li class="userMenu"><a>Usuario</a>
+    {% if not session.user.is_authenticated %}
     <ul>
-    <li><a href="{{ session.base_url }}/login">Login</a></li>
-    <li><a href="{{ session.base_url }}/register">Registro</a></li>
+      <li><a href="{{ session.base_url }}/login">Login</a></li>
+      <li><a href="{{ session.base_url }}/register">Registro</a></li>
     </ul>
-{% else %}
+    {% else %}
     <ul>
-    <li><a href="{{ session.base_url }}/logout">Logout</a></li>
+      {% if session.user.is_superuser %}
+      <li><a href="{{ session.base_url }}/admin">Administrar</a></li>
+      {% endif %}
+      <li><a href="{{ session.base_url }}/stream">Emitir video</a></li>
+      <li><a href="{{ session.base_url }}/upload">Subir video</a></li>
+      <li><a href="{{ session.base_url }}/logout">Logout</a></li>
     </ul>
-{% endif %}
-</li>
-<li><a href="{{ session.base_url }}/about">Sobre Ritho</a></li>
+    {% endif %}
+  </li>
+  <li><a href="{{ session.base_url }}/about">Sobre Ritho</a></li>
 </ul>
 </header>
 {% if leftCol %}

@@ -23,8 +23,6 @@ import logging
 def index(request):
     logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
     messages.set_level(request, messages.INFO)
-    if request.GET.get('next', False) is not False:
-        messages.add_message(request, messages.ERROR, 'La pagina %s no se puede visitar'%request.GET['next'])
     # request.session.clear()
     if request.session.get('isConfig', False) is False:
         request.session.set_expiry(600)
@@ -38,7 +36,7 @@ def auth_login(request):
     if request.method == 'POST':
         if request.session['user'].is_authenticated():
             messages.add_message(request, messages.ERROR, 'User already logged in')
-            if request.META['HTTP_REFERER'] is not None:
+            if request.META.get('HTTP_REFERER', False) is not False:
                 return HttpResponseRedirect(request.META['HTTP_REFERER'])
             else:
                 return HttpResponse(reverse('index'))
@@ -116,3 +114,56 @@ def reg(request):
         request.session.update(data)
         request.session['isConfig'] = True
     return MainViewer(request, request.session.session_key).getViewer('register')
+
+def streaming(request):
+    logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
+    messages.set_level(request, messages.INFO)
+    if request.session.get('isConfig', False) is False:
+        request.session.set_expiry(600)
+        data = Config(request.session.session_key).getSessionData()
+        request.session.update(data)
+        request.session['isConfig'] = True
+    return MainViewer(request, request.session.session_key).getViewer('streaming')
+
+def videos(request):
+    logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
+    messages.set_level(request, messages.INFO)
+    if request.session.get('isConfig', False) is False:
+        request.session.set_expiry(600)
+        data = Config(request.session.session_key).getSessionData()
+        request.session.update(data)
+        request.session['isConfig'] = True
+    return MainViewer(request, request.session.session_key).getViewer('videos')
+
+@user_passes_test(lambda u: u.is_authenticated(),'index')
+def stream(request):
+    logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
+    messages.set_level(request, messages.INFO)
+    if request.session.get('isConfig', False) is False:
+        request.session.set_expiry(600)
+        data = Config(request.session.session_key).getSessionData()
+        request.session.update(data)
+        request.session['isConfig'] = True
+    return MainViewer(request, request.session.session_key).getViewer('stream')
+
+@user_passes_test(lambda u: u.is_authenticated(),'index')
+def upload(request):
+    logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
+    messages.set_level(request, messages.INFO)
+    if request.session.get('isConfig', False) is False:
+        request.session.set_expiry(600)
+        data = Config(request.session.session_key).getSessionData()
+        request.session.update(data)
+        request.session['isConfig'] = True
+    return MainViewer(request, request.session.session_key).getViewer('upload')
+
+@user_passes_test(lambda u: u.is_superuser,'index')
+def admin(request):
+    logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
+    messages.set_level(request, messages.INFO)
+    if request.session.get('isConfig', False) is False:
+        request.session.set_expiry(600)
+        data = Config(request.session.session_key).getSessionData()
+        request.session.update(data)
+        request.session['isConfig'] = True
+    return MainViewer(request, request.session.session_key).getViewer('admin')
