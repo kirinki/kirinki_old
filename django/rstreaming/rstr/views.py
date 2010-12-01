@@ -50,21 +50,21 @@ def auth_login(request):
                 login(request, user)
                 messages.add_message(request, messages.INFO, 'User logged in')
                 request.session['user'] = user
-                if request.META['HTTP_REFERER'] is not None:
+                if request.META.get('HTTP_REFERER', False) is not False:
                     return HttpResponseRedirect(request.META['HTTP_REFERER'])
                 else:
                     return HttpResponse(reverse('index'))
             else:
                 # Return a 'disabled account' error message
                 messages.add_message(request, messages.ERROR, 'Your account is disabled.')
-                if request.META['HTTP_REFERER'] is not None:
+                if request.META.get('HTTP_REFERER', False) is not False:
                     return HttpResponseRedirect(request.META['HTTP_REFERER'])
                 else:
                     return HttpResponse(reverse('index'))
         else:
             # Return an 'invalid login' error message.
             messages.add_message(request, messages.ERROR, 'Username or password error.')
-            if request.META['HTTP_REFERER'] is not None:
+            if request.META.get('HTTP_REFERER', False) is not False:
                 return HttpResponseRedirect(request.META['HTTP_REFERER'])
             else:
                 return HttpResponse(reverse('index'))
@@ -85,13 +85,13 @@ def auth_logout(request):
     if request.session['user'].is_authenticated():
         logout(request)
         messages.add_message(request, messages.INFO, 'User logged out.')
-        if request.META['HTTP_REFERER'] is not None:
+        if request.META.get('HTTP_REFERER', False) is not False:
             return HttpResponseRedirect(request.META['HTTP_REFERER'])
         else:
             return HttpResponse(reverse('index'))
     else:
         messages.add_message(request, messages.ERROR, 'User not logged in.')
-        if request.META['HTTP_REFERER'] is not None:
+        if request.META.get('HTTP_REFERER', False) is not False:
             return HttpResponseRedirect(request.META['HTTP_REFERER'])
         else:
             return HttpResponse(reverse('index'))
