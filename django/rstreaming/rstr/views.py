@@ -92,7 +92,7 @@ def auth_logout(request):
         if request.META.get('HTTP_REFERER', False) is not False:
             return HttpResponseRedirect(request.META['HTTP_REFERER'])
         else:
-            return HttpResponse(reverse('index'))
+            return HttpResponse(reverse('logout'))
 
 def about(request):
     logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)

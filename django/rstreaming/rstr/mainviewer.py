@@ -13,22 +13,35 @@ class MainViewer:
         self.session_data = s.get_decoded()
         self.request = req
         
-    def getViewer(self, page):
-        self.page = render_to_response('rstr/index.html', {'copy' : '&copy; Pablo Alvarez de Sotomayor Posadillo',
-                                                           'session' : self.session_data,
-                                                           'leftCol' : self.getLeftCol(),
-                                                           'centerCol' : self.getCenterCol(),
-                                                           'rightCol' : self.getRightCol()}, context_instance=RequestContext(self.request))
+    def getViewer(self, out):
+        if out == 'index' or out == 'logout' or out == 'about' or out == 'streaming' or out == 'videos' or out == 'stream' or out == 'upload' or out == 'admin':
+            leftBlocks = []
+            if not self.session_data['user'].is_authenticated():
+                leftBlocks = [render_to_string('rstr/login.html', {'session' : self.session_data}, context_instance=RequestContext(self.request))]
+            self.page = render_to_response('rstr/index.html', {'copy' : '&copy; Pablo Alvarez de Sotomayor Posadillo',
+                                                               'session' : self.session_data,
+                                                               'leftCol' : self.getLeftCol(leftBlocks),
+                                                               'centerCol' : self.getCenterCol(),
+                                                               'rightCol' : self.getRightCol()}, context_instance=RequestContext(self.request))
+        elif out == 'login':
+            self.page = render_to_response('rstr/index.html', {'copy' : '&copy; Pablo Alvarez de Sotomayor Posadillo',
+                                                               'session' : self.session_data,
+                                                               'leftCol' : self.getLeftCol(),
+                                                               'centerCol' : self.getCenterCol(),
+                                                               'rightCol' : self.getRightCol()}, context_instance=RequestContext(self.request))
+        elif out == 'register':
+            self.page = render_to_response('rstr/index.html', {'copy' : '&copy; Pablo Alvarez de Sotomayor Posadillo',
+                                                               'session' : self.session_data,
+                                                               'leftCol' : self.getLeftCol(),
+                                                               'centerCol' : self.getCenterCol(),
+                                                               'rightCol' : self.getRightCol()}, context_instance=RequestContext(self.request))
         return self.page
 
-    def getLeftCol(self):
-        blocks = []
-        if not self.session_data['user'].is_authenticated():
-            blocks = [render_to_string('rstr/login.html', {'session' : self.session_data}, context_instance=RequestContext(self.request))]
+    def getLeftCol(self, blocks = []):
         return render_to_string('rstr/left.html', {'blocks' : blocks})
 
-    def getCenterCol(self):
+    def getCenterCol(self, blocks = []):
         return render_to_string('rstr/center.html', {})
 
-    def getRightCol(self):
+    def getRightCol(self, blocks = []):
         return render_to_string('rstr/right.html', {})
