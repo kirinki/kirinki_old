@@ -107,13 +107,24 @@ def about(request):
 @user_passes_test(lambda u: u.is_anonymous(),'index')
 def reg(request):
     logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
-    messages.set_level(request, messages.INFO)
-    if request.session.get('isConfig', False) is False:
-        request.session.set_expiry(600)
-        data = Config(request.session.session_key).getSessionData()
-        request.session.update(data)
-        request.session['isConfig'] = True
-    return MainViewer(request, request.session.session_key).getViewer('register')
+    if request.method == 'GET':
+        messages.set_level(request, messages.INFO)
+        if request.session.get('isConfig', False) is False:
+            request.session.set_expiry(600)
+            data = Config(request.session.session_key).getSessionData()
+            request.session.update(data)
+            request.session['isConfig'] = True
+        return MainViewer(request, request.session.session_key).getViewer('register')
+    elif request.method == 'POST':
+        messages.set_level(request, messages.INFO)
+        if request.session.get('isConfig', False) is False:
+            request.session.set_expiry(600)
+            data = Config(request.session.session_key).getSessionData()
+            request.session.update(data)
+            request.session['isConfig'] = True
+        return MainViewer(request, request.session.session_key).getViewer('register')
+    else:
+        raise Http404
 
 def streaming(request):
     logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
