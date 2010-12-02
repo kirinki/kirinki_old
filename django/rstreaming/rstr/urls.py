@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+__license__ = "GNU General Public License, Ver.3"
+__author__ = "Pablo Alvarez de Sotomayor Posadillo"
+
 # from django.views.decorators.cache import cache_page
 from django.conf.urls.defaults import *
 
@@ -7,7 +11,6 @@ urlpatterns = patterns('rstr.views',
                        (r'^index/*$', 'index'),
                        (r'^login/*$', 'auth_login'),
                        (r'^logout/*$', 'auth_logout'),
-                       (r'^about/*$', 'about'),
                        (r'^register/*$', 'reg'),
                        (r'^streaming/*$', 'streaming'),
                        (r'^videos/*$', 'videos'),

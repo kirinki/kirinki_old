@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+__license__ = "GNU General Public License, Ver.3"
+__author__ = "Pablo Alvarez de Sotomayor Posadillo"
+
 # from django.views.decorators.vary import vary_on_headers
 from django.views.decorators.vary import vary_on_cookie
 # from django.views.decorators.cache import cache_control
@@ -96,16 +100,6 @@ def auth_logout(request):
             return HttpResponseRedirect(request.META['HTTP_REFERER'])
         else:
             return HttpResponse(reverse('logout'))
-
-def about(request):
-    logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
-    messages.set_level(request, messages.INFO)
-    if request.session.get('isConfig', False) is False:
-        request.session.set_expiry(600)
-        data = Config(request.session.session_key).getSessionData()
-        request.session.update(data)
-        request.session['isConfig'] = True
-    return MainViewer(request, request.session.session_key).getViewer('about')
 
 @user_passes_test(lambda u: u.is_anonymous(),'index')
 def reg(request):

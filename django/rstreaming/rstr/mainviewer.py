@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+__license__ = "GNU General Public License, Ver.3"
+__author__ = "Pablo Alvarez de Sotomayor Posadillo"
+
 from django.core.cache import cache
 from django.contrib.sessions.models import Session
 from django.template import RequestContext
@@ -40,12 +44,6 @@ class MainViewer:
             rightBlocks = [self.generateArticles(), self.generateVideos()]
 
         elif out == 'logout':
-            if not self.session_data['user'].is_authenticated():
-                leftBlocks = [render_to_string('rstr/section.html', {'title' : 'login', 'content': render_to_string('rstr/login.html', {'session' : self.session_data}, context_instance=RequestContext(self.request))})]
-            centerBlocks = [render_to_string('rstr/section.html', {'title' : 'Bienvenido', 'content' : 'Bienvenido al sitio web de Ritho.'})]
-            rightBlocks = [self.generateArticles(), self.generateVideos()]
-
-        elif out == 'about':
             if not self.session_data['user'].is_authenticated():
                 leftBlocks = [render_to_string('rstr/section.html', {'title' : 'login', 'content': render_to_string('rstr/login.html', {'session' : self.session_data}, context_instance=RequestContext(self.request))})]
             centerBlocks = [render_to_string('rstr/section.html', {'title' : 'Bienvenido', 'content' : 'Bienvenido al sitio web de Ritho.'})]

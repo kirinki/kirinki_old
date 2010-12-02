@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+__license__ = "GNU General Public License, Ver.3"
+__author__ = "Pablo Alvarez de Sotomayor Posadillo"
+
 from django.core.cache import cache
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.sessions.models import Session
