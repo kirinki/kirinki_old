@@ -178,3 +178,14 @@ def admin(request):
         request.session.update(data)
         request.session['isConfig'] = True
     return MainViewer(request, request.session.session_key).getViewer('admin')
+
+@user_passes_test(lambda u: u.is_authenticated(),'index')
+def account(request):
+    logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
+    messages.set_level(request, messages.INFO)
+    if request.session.get('isConfig', False) is False:
+        request.session.set_expiry(600)
+        data = Config(request.session.session_key).getSessionData()
+        request.session.update(data)
+        request.session['isConfig'] = True
+    return MainViewer(request, request.session.session_key).getViewer('account')

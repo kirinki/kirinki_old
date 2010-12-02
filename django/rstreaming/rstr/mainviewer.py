@@ -14,7 +14,7 @@ class MainViewer:
         self.request = req
         
     def getViewer(self, out):
-        if out == 'index' or out == 'logout' or out == 'about' or out == 'streaming' or out == 'videos' or out == 'stream' or out == 'upload' or out == 'admin':
+        if out == 'index':
             leftBlocks = []
             if not self.session_data['user'].is_authenticated():
                 leftBlocks = [render_to_string('rstr/section.html', {'title' : 'login', 'content': render_to_string('rstr/login.html', {'session' : self.session_data}, context_instance=RequestContext(self.request))})]
@@ -40,6 +40,94 @@ class MainViewer:
                                                                'leftCol' : self.getLeftCol(),
                                                                'centerCol' : self.getCenterCol(),
                                                                'rightCol' : self.getRightCol()}, context_instance=RequestContext(self.request))
+        elif out == 'videos':
+            leftBlocks = []
+            if not self.session_data['user'].is_authenticated():
+                leftBlocks = [render_to_string('rstr/section.html', {'title' : 'login', 'content': render_to_string('rstr/login.html', {'session' : self.session_data}, context_instance=RequestContext(self.request))})]
+            centerBlocks = [render_to_string('rstr/section.html', {'title' : 'Bienvenido', 'content' : 'Bienvenido al sitio web de Ritho.'})]
+            rightBlocks = [self.generateArticles(), self.generateVideos()]
+            self.page = render_to_response('rstr/index.html', {'copy' : '&copy; Pablo Alvarez de Sotomayor Posadillo',
+                                                               'session' : self.session_data,
+                                                               'leftCol' : self.getLeftCol(leftBlocks),
+                                                               'centerCol' : self.getCenterCol(centerBlocks),
+                                                               'rightCol' : self.getRightCol(rightBlocks)}, context_instance=RequestContext(self.request))
+        elif out == 'logout':
+            leftBlocks = []
+            if not self.session_data['user'].is_authenticated():
+                leftBlocks = [render_to_string('rstr/section.html', {'title' : 'login', 'content': render_to_string('rstr/login.html', {'session' : self.session_data}, context_instance=RequestContext(self.request))})]
+            centerBlocks = [render_to_string('rstr/section.html', {'title' : 'Bienvenido', 'content' : 'Bienvenido al sitio web de Ritho.'})]
+            rightBlocks = [self.generateArticles(), self.generateVideos()]
+            self.page = render_to_response('rstr/index.html', {'copy' : '&copy; Pablo Alvarez de Sotomayor Posadillo',
+                                                               'session' : self.session_data,
+                                                               'leftCol' : self.getLeftCol(leftBlocks),
+                                                               'centerCol' : self.getCenterCol(centerBlocks),
+                                                               'rightCol' : self.getRightCol(rightBlocks)}, context_instance=RequestContext(self.request))
+        elif out == 'about':
+            leftBlocks = []
+            if not self.session_data['user'].is_authenticated():
+                leftBlocks = [render_to_string('rstr/section.html', {'title' : 'login', 'content': render_to_string('rstr/login.html', {'session' : self.session_data}, context_instance=RequestContext(self.request))})]
+            centerBlocks = [render_to_string('rstr/section.html', {'title' : 'Bienvenido', 'content' : 'Bienvenido al sitio web de Ritho.'})]
+            rightBlocks = [self.generateArticles(), self.generateVideos()]
+            self.page = render_to_response('rstr/index.html', {'copy' : '&copy; Pablo Alvarez de Sotomayor Posadillo',
+                                                               'session' : self.session_data,
+                                                               'leftCol' : self.getLeftCol(leftBlocks),
+                                                               'centerCol' : self.getCenterCol(centerBlocks),
+                                                               'rightCol' : self.getRightCol(rightBlocks)}, context_instance=RequestContext(self.request))
+        elif out == 'streaming':
+            leftBlocks = []
+            if not self.session_data['user'].is_authenticated():
+                leftBlocks = [render_to_string('rstr/section.html', {'title' : 'login', 'content': render_to_string('rstr/login.html', {'session' : self.session_data}, context_instance=RequestContext(self.request))})]
+            centerBlocks = [render_to_string('rstr/section.html', {'title' : 'Bienvenido', 'content' : 'Bienvenido al sitio web de Ritho.'})]
+            rightBlocks = [self.generateArticles(), self.generateVideos()]
+            self.page = render_to_response('rstr/index.html', {'copy' : '&copy; Pablo Alvarez de Sotomayor Posadillo',
+                                                               'session' : self.session_data,
+                                                               'leftCol' : self.getLeftCol(leftBlocks),
+                                                               'centerCol' : self.getCenterCol(centerBlocks),
+                                                               'rightCol' : self.getRightCol(rightBlocks)}, context_instance=RequestContext(self.request))
+        elif out == 'stream':
+            leftBlocks = []
+            if not self.session_data['user'].is_authenticated():
+                leftBlocks = [render_to_string('rstr/section.html', {'title' : 'login', 'content': render_to_string('rstr/login.html', {'session' : self.session_data}, context_instance=RequestContext(self.request))})]
+            centerBlocks = [render_to_string('rstr/section.html', {'title' : 'Bienvenido', 'content' : 'Bienvenido al sitio web de Ritho.'})]
+            rightBlocks = [self.generateArticles(), self.generateVideos()]
+            self.page = render_to_response('rstr/index.html', {'copy' : '&copy; Pablo Alvarez de Sotomayor Posadillo',
+                                                               'session' : self.session_data,
+                                                               'leftCol' : self.getLeftCol(leftBlocks),
+                                                               'centerCol' : self.getCenterCol(centerBlocks),
+                                                               'rightCol' : self.getRightCol(rightBlocks)}, context_instance=RequestContext(self.request))
+        elif out == 'upload':
+            leftBlocks = []
+            if not self.session_data['user'].is_authenticated():
+                leftBlocks = [render_to_string('rstr/section.html', {'title' : 'login', 'content': render_to_string('rstr/login.html', {'session' : self.session_data}, context_instance=RequestContext(self.request))})]
+            centerBlocks = [render_to_string('rstr/section.html', {'title' : 'Bienvenido', 'content' : 'Bienvenido al sitio web de Ritho.'})]
+            rightBlocks = [self.generateArticles(), self.generateVideos()]
+            self.page = render_to_response('rstr/index.html', {'copy' : '&copy; Pablo Alvarez de Sotomayor Posadillo',
+                                                               'session' : self.session_data,
+                                                               'leftCol' : self.getLeftCol(leftBlocks),
+                                                               'centerCol' : self.getCenterCol(centerBlocks),
+                                                               'rightCol' : self.getRightCol(rightBlocks)}, context_instance=RequestContext(self.request))
+        elif out == 'admin':
+            leftBlocks = []
+            if not self.session_data['user'].is_authenticated():
+                leftBlocks = [render_to_string('rstr/section.html', {'title' : 'login', 'content': render_to_string('rstr/login.html', {'session' : self.session_data}, context_instance=RequestContext(self.request))})]
+            centerBlocks = [render_to_string('rstr/section.html', {'title' : 'Bienvenido', 'content' : 'Bienvenido al sitio web de Ritho.'})]
+            rightBlocks = [self.generateArticles(), self.generateVideos()]
+            self.page = render_to_response('rstr/index.html', {'copy' : '&copy; Pablo Alvarez de Sotomayor Posadillo',
+                                                               'session' : self.session_data,
+                                                               'leftCol' : self.getLeftCol(leftBlocks),
+                                                               'centerCol' : self.getCenterCol(centerBlocks),
+                                                               'rightCol' : self.getRightCol(rightBlocks)}, context_instance=RequestContext(self.request))
+        elif out == 'account':
+            leftBlocks = []
+            if not self.session_data['user'].is_authenticated():
+                leftBlocks = [render_to_string('rstr/section.html', {'title' : 'login', 'content': render_to_string('rstr/login.html', {'session' : self.session_data}, context_instance=RequestContext(self.request))})]
+            centerBlocks = [render_to_string('rstr/section.html', {'title' : 'Bienvenido', 'content' : 'Bienvenido al sitio web de Ritho.'})]
+            rightBlocks = [self.generateArticles(), self.generateVideos()]
+            self.page = render_to_response('rstr/index.html', {'copy' : '&copy; Pablo Alvarez de Sotomayor Posadillo',
+                                                               'session' : self.session_data,
+                                                               'leftCol' : self.getLeftCol(leftBlocks),
+                                                               'centerCol' : self.getCenterCol(centerBlocks),
+                                                               'rightCol' : self.getRightCol(rightBlocks)}, context_instance=RequestContext(self.request))
         return self.page
 
     def getLeftCol(self, blocks = []):

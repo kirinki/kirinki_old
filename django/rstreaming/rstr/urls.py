@@ -14,6 +14,7 @@ urlpatterns = patterns('rstr.views',
                        (r'^stream/*$', 'stream'),
                        (r'^upload/*$', 'upload'),
                        (r'^admin/*$', 'admin'),
+                       (r'^account/*$', 'account'),
                        # (r'^/*$', cache_page('index',60*5)), # Vista cacheada 5 minutos
                        # (r'^$(?P<parametro>\d+)/$', 'index'),
                        )
