@@ -69,11 +69,6 @@ ul.hmenu li ul li a {
     background: none;
 }
 
-article a{
-    text-decoration: none;
-    color: #00f;
-}
-
 section {
     text-align: justify;
 }
@@ -82,6 +77,22 @@ section h1 {
     text-align: center;
 }
 
+section .content {
+    text-align: center;
+}
+
+section article a{
+    text-decoration: none;
+    color: #00f;
+}
+
+section article .abstract{
+    text-align: left;
+}
+
+section article .content{
+    text-align: justify;
+}
 
 .col1 {
     float: left;
@@ -100,14 +111,15 @@ section h1 {
 
 .col21 {
     float: left;
-    width: 60%;
-    padding: 10px;
+    width: 62%;
+    padding: 0;
+    padding-bottom: 10px;
     margin: 0;
 }
 
 .col22 {
     float: right;
-    width: 35%;
+    width: 36%;
     padding: 10px;
     margin: 0;
     border-left: 5px solid #def;
@@ -123,4 +135,19 @@ footer {
 
 .floating {
     cursor: move;
+}
+
+.login {
+    width: 100%;
+    text-align: center;
+}
+
+.login .tag {
+    width: 50%;
+    text-align: right;
+}
+
+.login .field {
+    width: 50%;
+    text-align: left;
 }

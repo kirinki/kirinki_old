@@ -2,17 +2,11 @@
 {% load cache %}
 {% get_current_language as LANGUAGE_CODE %}
 
-<h1>Login</h1>
 <form action="{{ session.base_url }}/login" method="post">
   {% csrf_token %}
-  <table>
-    <tr><td span="2">
-	{% if session.error %}
-	<p class="error">{{ session.error }}</p>
-	{% endif %}
-    </td></tr>
-    <tr><td>Login: </td><td><input type="text" name="username"></td></tr>
-    <tr><td>Password: </td><td><input type="password" name="password"></td></tr>
-    <tr><td span="2"><input type="submit" /></td></tr>
+  <table class="login">
+    <tr><td class="tag">Login: </td><td class="field"><input type="text" name="username"></td></tr>
+    <tr><td class="tag">Password: </td><td class="field"><input type="password" name="password"></td></tr>
+    <tr><td colspan="2"><input type="submit" /></td></tr>
   </table>
 </form>

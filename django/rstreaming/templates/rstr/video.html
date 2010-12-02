@@ -1,0 +1,20 @@
+{% load i18n %}
+{% load cache %}
+{% get_current_language as LANGUAGE_CODE %}
+
+<video
+   {% if width %}
+   width="{{ width }}"
+   {% endif %}
+   {% if height %}
+   height="{{ height }}"
+   {% endif %}
+   {% if controls %}
+   controls="controls"
+   {% endif %}
+   {% if src %}
+   src="{{ src }}"
+   {% endif %}
+   >
+  Your browser does not support the video tag.
+</video>
