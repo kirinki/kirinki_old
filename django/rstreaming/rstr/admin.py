@@ -11,5 +11,5 @@ from django.contrib import admin
 
 # admin.site.register(usr,UserAdmin)
 # admin.site.register(usrType)
-admin.site.register(video)
 admin.site.register(configs)
+admin.site.register(video)

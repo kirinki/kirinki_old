@@ -135,6 +135,7 @@ def reg(request):
                     user.is_active = False
                     user.first_name = request.POST['first_name']
                     user.last_name = request.POST['last_name']
+                    user.groups.add(Group.object.get(name='users'))
                     user.save()
 
                     send_mail('Welcome to Ritho\'s Streaming!', 'Welcome to Ritho\'s Streaming!\nTo activate the account please visit http://turing.ritho.net/rstr/activate?id='+str(user.id), 'rstr@ritho.net', [ user.email ], fail_silently=False)
