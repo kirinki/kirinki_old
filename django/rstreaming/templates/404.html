@@ -1,0 +1,28 @@
+{% load i18n %}
+{% load cache %}
+{% get_current_language as LANGUAGE_CODE %}
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Página no encontrada</title>
+<style type="text/css">
+  body {
+  text-align: center;
+  background-color: #000000;
+  color: #FF0000;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  }
+</style>
+</head>
+<body>
+<h1>Ups! La página {{ request_path }} no existe</h1>
+<p>Parece ser que, de forma totalmente accidental y/o aleatoria, has
+  llegado a una página que no existe. Por favor, continúa navegando
+  por el portal y no vuelvas a visitar esta página o tu ordenador
+  EXPLOTARA.</p>
+
+</body>
+</html>
