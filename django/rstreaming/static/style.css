@@ -137,17 +137,21 @@ footer {
     cursor: move;
 }
 
-.login {
+.form {
     width: 100%;
     text-align: center;
 }
 
-.login .tag {
-    width: 50%;
+.form .tag {
+    width: 43%;
     text-align: right;
 }
 
-.login .field {
-    width: 50%;
+.form .field {
+    width: 57%;
     text-align: left;
+}
+
+#recaptcha_area {
+    margin: auto;
 }

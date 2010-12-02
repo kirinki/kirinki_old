@@ -3,6 +3,7 @@ from django.contrib.sessions.models import Session
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.template.loader import render_to_string
+from recaptcha.client import captcha
 import logging
 
 class MainViewer:
@@ -28,17 +29,20 @@ class MainViewer:
         elif out == 'login':
             centerBlocks = []
             if not self.session_data['user'].is_authenticated():
-                centerBlocks = [render_to_string('rstr/section.html', {'title' : 'login', 'content': render_to_string('rstr/login.html', {'session' : self.session_data}, context_instance=RequestContext(self.request))})]
+                centerBlocks = [render_to_string('rstr/section.html', {'title' : 'Login', 'content': render_to_string('rstr/login.html', {'session' : self.session_data}, context_instance=RequestContext(self.request))})]
             self.page = render_to_response('rstr/index.html', {'copy' : '&copy; Pablo Alvarez de Sotomayor Posadillo',
                                                                'session' : self.session_data,
                                                                'leftCol' : self.getLeftCol(),
                                                                'centerCol' : self.getCenterCol(centerBlocks),
                                                                'rightCol' : self.getRightCol()}, context_instance=RequestContext(self.request))
         elif out == 'register':
+            centerBlocks = []
+            if not self.session_data['user'].is_authenticated():
+                centerBlocks = [render_to_string('rstr/section.html', {'title' : 'Register', 'content': render_to_string('rstr/register.html', {'session' : self.session_data, 'captcha' : captcha.displayhtml('6LefRr8SAAAAAMncFelaGsop60Uuon0MCL6H-aP3')}, context_instance=RequestContext(self.request))})]
             self.page = render_to_response('rstr/index.html', {'copy' : '&copy; Pablo Alvarez de Sotomayor Posadillo',
                                                                'session' : self.session_data,
                                                                'leftCol' : self.getLeftCol(),
-                                                               'centerCol' : self.getCenterCol(),
+                                                               'centerCol' : self.getCenterCol(centerBlocks),
                                                                'rightCol' : self.getRightCol()}, context_instance=RequestContext(self.request))
         elif out == 'videos':
             leftBlocks = []
