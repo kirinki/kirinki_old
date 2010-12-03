@@ -62,10 +62,10 @@ class MainViewer:
             rightBlocks = [self.generateArticles(), self.generateVideos()]
 
         elif out == 'upload':
-            if not self.session_data['user'].is_authenticated():
-                leftBlocks = [render_to_string('rstr/section.html', {'title' : 'login', 'content': render_to_string('rstr/login.html', {'session' : self.session_data}, context_instance=RequestContext(self.request))})]
-            centerBlocks = [render_to_string('rstr/section.html', {'title' : 'Bienvenido', 'content' : 'Bienvenido al sitio web de Ritho.'})]
-            rightBlocks = [self.generateArticles(), self.generateVideos()]
+            # Mis videos
+            leftBlocks = []
+            # Subir videos
+            centerBlocks = []
 
         elif out == 'admin':
             if not self.session_data['user'].is_authenticated():

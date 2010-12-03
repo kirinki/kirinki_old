@@ -5,6 +5,7 @@ __author__ = "Pablo Alvarez de Sotomayor Posadillo"
 from django.core.cache import cache
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.sessions.models import Session
+from django.core.exceptions import ObjectDoesNotExist
 from rstr.models import configs
 import logging
 
@@ -20,8 +21,8 @@ class Config:
 
         try:
             s = Session.objects.get(pk=key)
-        except DoesNotExist:
-            s = Session(session_key=key)
+        except ObjectDoesNotExist:
+            s = Session()
 
         session_data = s.get_decoded()
         if not session_data.get('user', False):
