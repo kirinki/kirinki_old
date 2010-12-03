@@ -20,7 +20,7 @@ class Config:
 
         try:
             s = Session.objects.get(pk=key)
-        except DoesNotExists:
+        except DoesNotExist:
             s = Session(session_key=key)
 
         session_data = s.get_decoded()
