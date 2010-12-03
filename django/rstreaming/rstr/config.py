@@ -18,7 +18,11 @@ class Config:
             cache.incr('numUsers')
             # cache.decr('numUsers')
 
-        s = Session.objects.get(pk=key)
+        try:
+            s = Session.objects.get(pk=key)
+        except DoesNotExists:
+            s = Session(session_key=key)
+
         session_data = s.get_decoded()
         if not session_data.get('user', False):
             session_data['user'] = AnonymousUser()
