@@ -4,7 +4,7 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    # ('Your Name', 'your_email@domain.com'),
+    ('Pablo Alvarez de Sotomayor Posadillo', 'palvarez@ritho.net'),
 )
 
 MANAGERS = ADMINS
@@ -109,6 +109,7 @@ INSTALLED_APPS = (
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 SESSION_SAVE_EVERY_REQUEST = True
+# SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 CACHE_BACKEND = 'memcached://127.0.0.1:21211/'
 MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
 EMAIL_HOST = 'smtp.gmail.com'

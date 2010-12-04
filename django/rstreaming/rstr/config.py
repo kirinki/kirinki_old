@@ -8,6 +8,7 @@ from django.contrib.sessions.models import Session
 from django.core.exceptions import ObjectDoesNotExist
 from rstr.models import configs
 import logging
+import datetime
 
 class Config:
     def __init__(self, key):
@@ -21,10 +22,14 @@ class Config:
 
         try:
             s = Session.objects.get(pk=key)
+            session_data = s.get_decoded()
         except ObjectDoesNotExist:
             s = Session()
+            s.expire_date = datetime.now()
+            s.expire_date.minute += 5
+            s.save()
+            session_data = {}
 
-        session_data = s.get_decoded()
         if not session_data.get('user', False):
             session_data['user'] = AnonymousUser()
 
