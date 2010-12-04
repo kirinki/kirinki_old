@@ -5,10 +5,9 @@ __author__ = "Pablo Alvarez de Sotomayor Posadillo"
 from django.core.cache import cache
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.sessions.models import Session
-from django.core.exceptions import ObjectDoesNotExist
 from rstr.models import configs
 import logging
-import datetime
+from datetime import datetime, timedelta
 
 class Config:
     def __init__(self, key):
@@ -23,10 +22,9 @@ class Config:
         try:
             s = Session.objects.get(pk=key)
             session_data = s.get_decoded()
-        except ObjectDoesNotExist:
+        except Session.DoesNotExist:
             s = Session()
-            s.expire_date = datetime.now()
-            s.expire_date.minute += 5
+            s.expire_date = datetime.now() + timedelta(0,600)
             s.save()
             session_data = {}
 

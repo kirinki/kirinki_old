@@ -14,9 +14,15 @@ class MainViewer:
     def __init__(self, req, key):
         logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
 
-        s = Session.objects.get(pk=key)
-        self.session_data = s.get_decoded()
         self.request = req
+        try:
+            s = Session.objects.get(pk=key)
+            self.session_data = s.get_decoded()
+        except Session.DoesNotExist:
+            s = Session()
+            s.expire_date = datetime.now() + timedelta(0,600)
+            s.save()
+            self.session_data = {}
         
     def getViewer(self, out):
         leftBlocks = []
