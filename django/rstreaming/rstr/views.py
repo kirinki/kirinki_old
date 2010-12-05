@@ -78,10 +78,10 @@ def auth_login(request):
         messages.set_level(request, messages.INFO)
         if request.session.get('isConfig', False) is False:
             request.session.set_expiry(600)
-            data = Config(request.session.session_key).getSessionData()
+            data = Config(request.session).getSessionData()
             request.session.update(data)
             request.session['isConfig'] = True
-        return MainViewer(request, request.session.session_key).getViewer('login')
+        return MainViewer(request, request.session).getViewer('login')
     else:
         raise Http404
 
@@ -108,10 +108,10 @@ def reg(request):
         if request.session.get('isConfig', False) is False:
             messages.set_level(request, messages.INFO)
             request.session.set_expiry(600)
-            data = Config(request.session.session_key).getSessionData()
+            data = Config(request.session).getSessionData()
             request.session.update(data)
             request.session['isConfig'] = True
-        return MainViewer(request, request.session.session_key).getViewer('register')
+        return MainViewer(request, request.session).getViewer('register')
     elif request.method == 'POST':
         if request.POST['password'] != request.POST['repeat_password']:
             messages.add_message(request, messages.INFO, 'User not registered. Passwords doesn\'t match.')
@@ -141,7 +141,7 @@ def reg(request):
             if request.session.get('isConfig', False) is False:
                 messages.set_level(request, messages.INFO)
                 request.session.set_expiry(600)
-                data = Config(request.session.session_key).getSessionData()
+                data = Config(request.session).getSessionData()
                 request.session.update(data)
                 request.session['isConfig'] = True
             if request.META.get('HTTP_REFERER', False) is not False:
@@ -173,20 +173,20 @@ def streaming(request):
     messages.set_level(request, messages.INFO)
     if request.session.get('isConfig', False) is False:
         request.session.set_expiry(600)
-        data = Config(request.session.session_key).getSessionData()
+        data = Config(request.session).getSessionData()
         request.session.update(data)
         request.session['isConfig'] = True
-    return MainViewer(request, request.session.session_key).getViewer('streaming')
+    return MainViewer(request, request.session).getViewer('streaming')
 
 def videos(request):
     logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
     messages.set_level(request, messages.INFO)
     if request.session.get('isConfig', False) is False:
         request.session.set_expiry(600)
-        data = Config(request.session.session_key).getSessionData()
+        data = Config(request.session).getSessionData()
         request.session.update(data)
         request.session['isConfig'] = True
-    return MainViewer(request, request.session.session_key).getViewer('videos')
+    return MainViewer(request, request.session).getViewer('videos')
 
 @user_passes_test(lambda u: u.is_authenticated(),'index')
 def stream(request):
@@ -194,10 +194,10 @@ def stream(request):
     messages.set_level(request, messages.INFO)
     if request.session.get('isConfig', False) is False:
         request.session.set_expiry(600)
-        data = Config(request.session.session_key).getSessionData()
+        data = Config(request.session).getSessionData()
         request.session.update(data)
         request.session['isConfig'] = True
-    return MainViewer(request, request.session.session_key).getViewer('stream')
+    return MainViewer(request, request.session).getViewer('stream')
 
 @user_passes_test(lambda u: u.is_authenticated(),'index')
 def upload(request):
@@ -205,10 +205,10 @@ def upload(request):
     messages.set_level(request, messages.INFO)
     if request.session.get('isConfig', False) is False:
         request.session.set_expiry(600)
-        data = Config(request.session.session_key).getSessionData()
+        data = Config(request.session).getSessionData()
         request.session.update(data)
         request.session['isConfig'] = True
-    return MainViewer(request, request.session.session_key).getViewer('upload')
+    return MainViewer(request, request.session).getViewer('upload')
 
 @user_passes_test(lambda u: u.is_superuser,'index')
 def admin(request):
@@ -216,10 +216,10 @@ def admin(request):
     messages.set_level(request, messages.INFO)
     if request.session.get('isConfig', False) is False:
         request.session.set_expiry(600)
-        data = Config(request.session.session_key).getSessionData()
+        data = Config(request.session).getSessionData()
         request.session.update(data)
         request.session['isConfig'] = True
-    return MainViewer(request, request.session.session_key).getViewer('admin')
+    return MainViewer(request, request.session).getViewer('admin')
 
 @user_passes_test(lambda u: u.is_authenticated(),'index')
 def account(request):
@@ -227,7 +227,7 @@ def account(request):
     messages.set_level(request, messages.INFO)
     if request.session.get('isConfig', False) is False:
         request.session.set_expiry(600)
-        data = Config(request.session.session_key).getSessionData()
+        data = Config(request.session).getSessionData()
         request.session.update(data)
         request.session['isConfig'] = True
-    return MainViewer(request, request.session.session_key).getViewer('account')
+    return MainViewer(request, request.session).getViewer('account')
