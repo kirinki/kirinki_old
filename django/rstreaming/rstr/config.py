@@ -10,7 +10,7 @@ import logging
 from datetime import datetime, timedelta
 
 class Config:
-    def __init__(self, key):
+    def __init__(self, session):
         logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
 
         if not cache.get('numUsers', False):
@@ -19,27 +19,16 @@ class Config:
             cache.incr('numUsers')
             # cache.decr('numUsers')
 
-        try:
-            s = Session.objects.get(pk=key)
-            session_data = s.get_decoded()
-        except Session.DoesNotExist:
-            s = Session()
-            s.expire_date = datetime.now() + timedelta(0,600)
-            s.save()
-            session_data = {}
-
-        if not session_data.get('user', False):
-            session_data['user'] = AnonymousUser()
+        if not session.get('user', False):
+            session['user'] = AnonymousUser()
 
         cfgs = configs.objects.all()
         for cfg in cfgs:
             logging.debug(cfg.cfgkey)
             logging.debug(cfg.cfgvalue)
-            session_data[cfg.cfgkey.encode('utf-8')] = cfg.cfgvalue.encode('utf-8')
+            session[cfg.cfgkey.encode('utf-8')] = cfg.cfgvalue.encode('utf-8')
 
-        self.data = session_data
-        s.session_data=Session.objects.encode(session_data)
-        s.save()
+        self.data = session
 
     def getSessionData(self):
         return self.data

@@ -8,21 +8,14 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.template.loader import render_to_string
 from recaptcha.client import captcha
+from datetime import datetime, timedelta
 import logging
 
 class MainViewer:
-    def __init__(self, req, key):
+    def __init__(self, req, session):
         logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
-
         self.request = req
-        try:
-            s = Session.objects.get(pk=key)
-            self.session_data = s.get_decoded()
-        except Session.DoesNotExist:
-            s = Session()
-            s.expire_date = datetime.now() + timedelta(0,600)
-            s.save()
-            self.session_data = {}
+        self.session_data = session
         
     def getViewer(self, out):
         leftBlocks = []

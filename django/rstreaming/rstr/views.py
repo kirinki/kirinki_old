@@ -33,10 +33,10 @@ def index(request):
     # request.session.clear()
     if request.session.get('isConfig', False) is False:
         request.session.set_expiry(600)
-        data = Config(request.session.session_key).getSessionData()
+        data = Config(request.session).getSessionData()
         request.session.update(data)
         request.session['isConfig'] = True
-    return MainViewer(request, request.session.session_key).getViewer('index')
+    return MainViewer(request, request.session).getViewer('index')
 
 @user_passes_test(lambda u: u.is_anonymous(),'index')
 def auth_login(request):
