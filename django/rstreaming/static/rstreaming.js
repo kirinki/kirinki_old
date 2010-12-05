@@ -13,6 +13,10 @@ $(document).ready(function() {
 
     $('div.col21').ready(
 	function(event) {
+	    if($('div.col21').height() < $('div.col1').height() ) {
+		$('div.col21').css("height", $('div.col1').height());
+	    }
+
 	    if($('div.col21').height() < $('div.col22').height() ) {
 		$('div.col21').css("height", $('div.col22').height());
 	    }

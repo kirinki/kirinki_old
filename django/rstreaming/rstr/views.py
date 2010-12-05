@@ -30,7 +30,7 @@ import logging
 def index(request):
     logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
     messages.set_level(request, messages.INFO)
-    # request.session.clear()
+    #request.session.clear()
     if request.session.get('isConfig', False) is False:
         request.session.set_expiry(600)
         data = Config(request.session).getSessionData()
