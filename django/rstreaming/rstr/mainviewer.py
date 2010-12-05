@@ -39,26 +39,16 @@ class MainViewer:
         elif out == 'videos':
             if not self.session_data['user'].is_authenticated():
                 leftBlocks = [render_to_string('rstr/section.html', {'title' : 'login', 'content': render_to_string('rstr/login.html', {'session' : self.session_data}, context_instance=RequestContext(self.request))})]
-            centerBlocks = [render_to_string('rstr/section.html', {'title' : 'Bienvenido', 'content' : 'Bienvenido al sitio web de Ritho.'})]
-            rightBlocks = [self.generateArticles(), self.generateVideos()]
 
         elif out == 'logout':
-            if not self.session_data['user'].is_authenticated():
-                leftBlocks = [render_to_string('rstr/section.html', {'title' : 'login', 'content': render_to_string('rstr/login.html', {'session' : self.session_data}, context_instance=RequestContext(self.request))})]
-            centerBlocks = [render_to_string('rstr/section.html', {'title' : 'Bienvenido', 'content' : 'Bienvenido al sitio web de Ritho.'})]
-            rightBlocks = [self.generateArticles(), self.generateVideos()]
+            pass
 
         elif out == 'streaming':
             if not self.session_data['user'].is_authenticated():
                 leftBlocks = [render_to_string('rstr/section.html', {'title' : 'login', 'content': render_to_string('rstr/login.html', {'session' : self.session_data}, context_instance=RequestContext(self.request))})]
-            centerBlocks = [render_to_string('rstr/section.html', {'title' : 'Bienvenido', 'content' : 'Bienvenido al sitio web de Ritho.'})]
-            rightBlocks = [self.generateArticles(), self.generateVideos()]
 
         elif out == 'stream':
-            if not self.session_data['user'].is_authenticated():
-                leftBlocks = [render_to_string('rstr/section.html', {'title' : 'login', 'content': render_to_string('rstr/login.html', {'session' : self.session_data}, context_instance=RequestContext(self.request))})]
-            centerBlocks = [render_to_string('rstr/section.html', {'title' : 'Bienvenido', 'content' : 'Bienvenido al sitio web de Ritho.'})]
-            rightBlocks = [self.generateArticles(), self.generateVideos()]
+            pass
 
         elif out == 'upload':
             # Mis videos
@@ -67,16 +57,10 @@ class MainViewer:
             centerBlocks = []
 
         elif out == 'admin':
-            if not self.session_data['user'].is_authenticated():
-                leftBlocks = [render_to_string('rstr/section.html', {'title' : 'login', 'content': render_to_string('rstr/login.html', {'session' : self.session_data}, context_instance=RequestContext(self.request))})]
-            centerBlocks = [render_to_string('rstr/section.html', {'title' : 'Bienvenido', 'content' : 'Bienvenido al sitio web de Ritho.'})]
-            rightBlocks = [self.generateArticles(), self.generateVideos()]
+            pass
 
         elif out == 'account':
-            if not self.session_data['user'].is_authenticated():
-                leftBlocks = [render_to_string('rstr/section.html', {'title' : 'login', 'content': render_to_string('rstr/login.html', {'session' : self.session_data}, context_instance=RequestContext(self.request))})]
-            centerBlocks = [render_to_string('rstr/section.html', {'title' : 'Bienvenido', 'content' : 'Bienvenido al sitio web de Ritho.'})]
-            rightBlocks = [self.generateArticles(), self.generateVideos()]
+            pass
 
         else:
             raise Http404
@@ -98,9 +82,11 @@ class MainViewer:
         return render_to_string('rstr/right.html', {'blocks' : blocks})
 
     def generateArticles(self):
-        article = render_to_string('rstr/article.html', {'title' : 'Inicio del proyecto', 'date' : '2010-12-01','abstract' : 'Con la inauguracion de esta oficial comienza su andadura el proyecto.', 'content' : 'Explicacion del proyecto RStreaming'})
-        return render_to_string('rstr/section.html', {'title' : 'Ultimas noticias', 'content' : article})
+        # article = render_to_string('rstr/article.html', {'title' : 'Inicio del proyecto', 'date' : '2010-12-01','abstract' : 'Con la inauguracion de esta oficial comienza su andadura el proyecto.', 'content' : 'Explicacion del proyecto RStreaming'})
+        # return render_to_string('rstr/section.html', {'title' : 'Ultimas noticias', 'content' : article})
+        return ''
 
     def generateVideos(self):
-        videos = render_to_string('rstr/video.html', {'width' : '320', 'height' : '240', 'controls' : True, 'src': 'file:///home/i02sopop/Downloads/PiTP - 2009 - Monday, July 13, 2009 - Kernighan.hi.mp4'})
-        return render_to_string('rstr/section.html', {'title' : 'Videos', 'content' : videos})
+        # videos = render_to_string('rstr/video.html', {'width' : '320', 'height' : '240', 'controls' : True, 'src': 'file:///home/i02sopop/Downloads/PiTP - 2009 - Monday, July 13, 2009 - Kernighan.hi.mp4'})
+        # return render_to_string('rstr/section.html', {'title' : 'Videos', 'content' : videos})
+        return ''
