@@ -12,37 +12,26 @@ from django.contrib import messages
 from django.template import RequestContext
 from django.core.mail import send_mail
 from recaptcha.client import captcha
-from django.forms.util import ErrorList
-from django.contrib.auth import login
-from django.contrib.auth import logout
+from django.contrib.auth import login, logout
 from django.contrib.auth import authenticate
 from django.template.loader import render_to_string
 from django.contrib.auth.models import User
 
 from rstr.config import Config
+from rstr.common import ErrorClear
 from rstr.mainviewer import MainViewer
 from rstr.models import UserProfile
-
-class ErrorClear(ErrorList):
-    def __str__(self):
-        return self.as_clear().encode('utf-8')
-    def as_clear(self):
-        if not self:
-            return ''
-        return ''.join(['%s' % e for e in self])
 
 class LoginForm(forms.Form):
     username = forms.CharField(label='username',
                                min_length=3,
                                max_length=30,
-                               required=True,
-                               error_messages={'invalid': 'The username must have between 3 and 30 characters.'})
+                               required=True)
     password = forms.CharField(label='password',
                                widget=forms.PasswordInput,
                                min_length=5,
                                max_length=60,
-                               required=True,
-                               error_messages={'invalid': 'The password must have between 5 and 60 characters.'})
+                               required=True)
 
 class LoginView():
     def __init__(self, request):
