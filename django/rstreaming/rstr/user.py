@@ -192,6 +192,13 @@ class RegisterView():
                         self.render = HttpResponseRedirect(request.META['HTTP_REFERER'])
                     else:
                         self.render = HttpResponseRedirect('/rstr/index')
+            else:
+                for error in form.errors:
+                    messages.add_message(request, messages.ERROR, 'Error en ' + error + ': ' + str(form._errors[error]))
+                if request.META.get('HTTP_REFERER', False) is not False:
+                    self.render = HttpResponseRedirect(request.META['HTTP_REFERER'])
+                else:
+                    self.render = HttpResponseRedirect('/rstr/index')
         else:
             raise Http404
 

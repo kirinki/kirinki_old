@@ -33,7 +33,7 @@ class video(models.Model):
     path = models.CharField(max_length=250)
     format = models.CharField(max_length=20)
     pub_date = models.DateTimeField('date published')
-    id_owner = models.ForeignKey(User)
+    owner = models.ForeignKey(User)
 
     def __unicode__(self):
         return self.name
