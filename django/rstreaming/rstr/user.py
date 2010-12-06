@@ -251,7 +251,7 @@ class ActivationView():
         return self.render
 
     def cleanProfiles():
-        profiles = UserProfile.objects.all(key_expires < 0datetime.today())
+        profiles = UserProfile.objects.all(key_expires < datetime.today())
         for profile in profiles:
             profile.delete()
 

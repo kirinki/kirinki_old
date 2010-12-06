@@ -95,8 +95,8 @@ class UploadView():
                 upFile = request.FILES['fileUpload']
                 if upFile.size > 0:
                     path = ''
-                    if request.session.get('upload', False):
-                        path = request.session['upload']+'/'
+                    if request.session.get('upload_path', False):
+                        path = request.session['upload_path']+'/'
                     path += upFile.name
                     destination = open(path, 'wb+')
                     for chunk in upFile.chunks():
