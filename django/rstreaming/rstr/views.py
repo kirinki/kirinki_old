@@ -45,7 +45,10 @@ def videos(request):
     return VideosView(request).getRender()
 
 def viewVideo(request,key):
-    return VideosView(request,key).getRender()
+    return VideosView(request,VideosView.VIEW,key).getRender()
+
+def deleteVideo(request,key):
+    return VideosView(request,VideosView.DELETE,key).getRender()
 
 @user_passes_test(lambda u: u.is_authenticated(),'index')
 def stream(request):

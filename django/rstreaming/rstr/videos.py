@@ -35,7 +35,10 @@ class StreamingView():
         return self.render
 
 class VideosView():
-    def __init__(self, request, key=None):
+    LIST = 0
+    VIEW = 1
+    DELETE = 2
+    def __init__(self, request, action=0, key=None):
         logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
         messages.set_level(request, messages.INFO)
         if request.session.get('isConfig', False) is False:
@@ -45,8 +48,32 @@ class VideosView():
             request.session['isConfig'] = True
         leftBlocks = []
         if not request.session['user'].is_authenticated():
-            leftBlocks = [render_to_string('rstr/section.html', {'title' : 'login', 'content': render_to_string('rstr/form.html', {'form' : LoginForm(), 'action' : request.session['base_url']+'/login'}, context_instance=RequestContext(request))})]
-        self.render = MainViewer(request).render(leftBlocks, [], [])
+            leftBlocks = [render_to_string('rstr/section.html', {'title' : 'login', 'content': render_to_string('rstr/form.html', {'form' : LoginForm(), 'action' : request.session['base_url'] + '/login'}, context_instance=RequestContext(request))})]
+
+        centerBlocks = []
+        if action == self.LIST:
+            try:
+                videoList = video.objects.all()
+                centerBlocks = [render_to_string('rstr/section.html', {'title' : 'Lista de videos', 'content': render_to_string('rstr/videoList.html', {'videos' : videoList, 'session' : request.session}).encode('utf-8')})]
+            except video.DoesNotExist:
+                pass
+        elif action == self.VIEW:
+            if key is not None:
+                try:
+                    v = video.objects.get(idVideo=key)
+                    media = request.session['base_url'] + '/media/'
+                    bfile = media + v.path[v.path.rfind('/')+1:v.path.rfind('.')]
+                    src = {'ogv' : bfile + '.ogv', 'mp4' : bfile + '.mp4', 'webm' : bfile + '.webm', 'flash' : request.session['base_url'] + '/static/flowplayer/flowplayer-3.2.5.swf'}
+                    centerBlocks = [render_to_string('rstr/section.html', {'title' : v.name, 'content': render_to_string('rstr/video.html', {'controls' : True, 'src' : src})})]
+                except video.DoesNotExist:
+                    pass
+        elif action == self.DELETE:
+            pass
+
+        # Ultimos subidos, ultimos usuarios que han subido, usuarios que mas han subido, ...
+        rightBlocks = []
+
+        self.render = MainViewer(request).render(leftBlocks, centerBlocks, rightBlocks)
 
     def getRender(self):
         return self.render

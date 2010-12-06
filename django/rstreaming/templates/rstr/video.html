@@ -2,19 +2,42 @@
 {% load cache %}
 {% get_current_language as LANGUAGE_CODE %}
 
-<video
-   {% if width %}
-   width="{{ width }}"
+<video id="vSel" preload="none"
+       {% if width %} width="{{ width }}" {% endif %} 
+       {% if height %} height="{{ height }}" {% endif %}
+       {% if controls %} controls="controls" {% endif %} >
+
+   {% if src.mp4 %}
+   <source src="{{ src.mp4 }}" type="video/mp4" />
    {% endif %}
-   {% if height %}
-   height="{{ height }}"
+
+   {% if src.webm %}
+   <source src="{{ src.webm }}" type="video/webm" />
    {% endif %}
-   {% if controls %}
-   controls="controls"
+
+   {% if src.ogv %}
+   <source src="{{ src.ogv }}" type="video/ogg" />
    {% endif %}
-   {% if src %}
-   src="{{ src }}"
+
+   {% if src.flash %}
+   <object {% if width %} width="{{ width }}" {% endif %} 
+	   {% if height %} height="{{ height }}" {% endif %}
+	   type="application/x-shockwave-flash"
+	   data="player.swf">
+     <param name="movie" value="{{ src.flash }}" />
+   </object>
    {% endif %}
-   >
-  Your browser does not support the video tag.
 </video>
+
+<script type="text/javascript">
+</script>
+
+<p><strong>Download Video:</strong>
+  {% if src.mp4 %}
+  Closed Format: <a href="{{ src.mp4 }}">"mp4"</a>
+  {% endif %}
+
+  {% if src.ogv %}
+  Open Format: <a href="src.ogv">"Ogg"</a>
+  {% endif %}
+</p>

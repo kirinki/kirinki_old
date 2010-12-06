@@ -9,7 +9,6 @@
   <p><a href="{{ session.base_url }}/videos/view/{{ video.idVideo }}">{{ video.name }}</a></p>
   <date>{{ video.pub_date|date:"D d M Y H:i" }}</date>
   <p>{{ video.description }}</p>
-  <span class="actions"><a href="{{ session.base_url }}/videos/delete/{{ video.idVideo }}">Eliminar</a></span>
 </li>
 {% endfor %}
 {% endif %}

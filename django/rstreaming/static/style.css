@@ -96,9 +96,10 @@ section article .content{
 
 .col1 {
     float: left;
-    width: 23%;
-    padding: 10px;
+    width: 24%;
+    padding: 0px;
     margin: 0;
+    min-height: 600px;
 }
 
 .col2 {
@@ -111,16 +112,15 @@ section article .content{
 
 .col21 {
     float: left;
-    width: 62%;
+    width: 63%;
     padding: 0;
-    padding-bottom: 10px;
     margin: 0;
 }
 
 .col22 {
-    float: right;
+    float: left;
     width: 36%;
-    padding: 10px;
+    padding: 0;
     margin: 0;
     border-left: 5px solid #def;
 }
@@ -138,17 +138,14 @@ footer {
 }
 
 .form {
-    width: 100%;
     text-align: center;
 }
 
 .form .tag {
-    width: 43%;
     text-align: right;
 }
 
 .form .field {
-    width: 57%;
     text-align: left;
 }
 
@@ -173,4 +170,9 @@ footer {
     color: #777;
     padding: 0;
     margin: 0;
+}
+
+video {
+    max-height: 500px;
+    max-width: 100%;
 }
