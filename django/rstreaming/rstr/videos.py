@@ -2,6 +2,7 @@
 __license__ = "GNU General Public License, Ver.3"
 __author__ = "Pablo Alvarez de Sotomayor Posadillo"
 
+import os
 import logging
 from datetime import datetime
 
@@ -74,7 +75,14 @@ class VideosView():
                 except video.DoesNotExist:
                     pass
         elif action == self.DELETE:
-            pass
+                try:
+                    v = video.objects.get(idVideo=key)
+                    name = v.name
+                    os.remove(v.path)
+                    v.delete()
+                    centerBlocks = ['<p>Video ' + name + ' deleted.</p>']
+                except video.DoesNotExist:
+                    pass
 
         # Ultimos subidos, ultimos usuarios que han subido, usuarios que mas han subido, ...
         rightBlocks = []
