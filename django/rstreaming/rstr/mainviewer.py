@@ -23,11 +23,7 @@ class MainViewer:
         centerBlocks = []
         rightBlocks = []
 
-        if out == 'register':
-            if not self.session_data['user'].is_authenticated():
-                centerBlocks = [render_to_string('rstr/section.html', {'title' : 'Register', 'content': render_to_string('rstr/register.html', {'session' : self.session_data, 'captcha' : captcha.displayhtml('6LefRr8SAAAAAMncFelaGsop60Uuon0MCL6H-aP3')}, context_instance=RequestContext(self.request))})]
-
-        elif out == 'videos':
+        if out == 'videos':
             if not self.session_data['user'].is_authenticated():
                 leftBlocks = [render_to_string('rstr/section.html', {'title' : 'login', 'content': render_to_string('rstr/login.html', {'session' : self.session_data}, context_instance=RequestContext(self.request))})]
 
