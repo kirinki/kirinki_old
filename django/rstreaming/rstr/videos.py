@@ -49,6 +49,12 @@ class VideosView():
         leftBlocks = []
         if not request.session['user'].is_authenticated():
             leftBlocks = [render_to_string('rstr/section.html', {'title' : 'login', 'content': render_to_string('rstr/form.html', {'form' : LoginForm(), 'action' : request.session['base_url'] + '/login'}, context_instance=RequestContext(request))})]
+        else:
+            try:
+                myVideos = video.objects.filter(owner = request.session['user'])
+                leftBlocks = [render_to_string('rstr/section.html', {'title' : 'Mis vídeos', 'content' : render_to_string('rstr/myVideo.html', {'videos' : myVideos, 'session' : request.session}).encode('utf-8')})]
+            except video.DoesNotExist:
+                pass
 
         centerBlocks = []
         if action == self.LIST:
