@@ -18,6 +18,7 @@ from rstr.mainviewer import MainViewer
 from rstr.index import IndexView
 from rstr.user import LoginView
 from rstr.user import RegisterView
+from rstr.user import ActivationView
 import logging
 
 # @vary_on_header s('Cookie')
@@ -52,21 +53,8 @@ def reg(request):
     return RegisterView(request).getRender()
 
 @user_passes_test(lambda u: u.is_anonymous(),'index')
-def activate(request):
-    logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
-    if request.method == 'GET':
-        try:
-            user = User.objects.get(pk=request.GET['id'])
-            if not user.is_active:
-                user.is_active = True
-                user.save()
-                messages.add_message(request, messages.INFO, 'User '+user.username+' is activated')
-            else:
-                messages.add_message(request, messages.INFO, 'User '+user.username+' was already activated')
-        except User.DoesNotExist:
-                messages.add_message(request, messages.INFO, 'User does not exists')
-        return HttpResponseRedirect('/rstr/index')
-
+def activate(request, key):
+    return ActivationView(request).getRender()
 
 def streaming(request):
     logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)

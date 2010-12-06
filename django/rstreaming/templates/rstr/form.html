@@ -19,6 +19,11 @@
       </td>
     </tr>
     {% endfor %}
+    {% if captcha %}
+    {% autoescape off %}
+    <tr><td colspan="3">{{ captcha }}</td></tr>
+    {% endautoescape %}
+    {% endif %}
     <tr><td colspan="3"><input type="submit" /></td></tr>
   </table>
 </form>
