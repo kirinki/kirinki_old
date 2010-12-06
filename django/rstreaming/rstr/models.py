@@ -25,6 +25,7 @@ class video(models.Model):
     idVideo = models.AutoField(primary_key=True)
     name = models.CharField(max_length=80)
     description = models.CharField(max_length=250)
+    path = models.CharField(max_length=250)
     format = models.CharField(max_length=20)
     pub_date = models.DateTimeField('date published')
     id_owner = models.ForeignKey(User)

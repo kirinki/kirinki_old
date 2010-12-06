@@ -9,6 +9,7 @@ from django.shortcuts import render_to_response
 from django.template.loader import render_to_string
 from recaptcha.client import captcha
 from datetime import datetime, timedelta
+from rstr.models import video
 import logging
 
 class MainViewer:
@@ -51,10 +52,8 @@ class MainViewer:
             pass
 
         elif out == 'upload':
-            # Mis videos
-            leftBlocks = []
-            # Subir videos
-            centerBlocks = []
+            leftBlocks = [self.getMyVideos()]
+            centerBlocks = [self.getUploadVideo()]
 
         elif out == 'admin':
             pass
@@ -90,3 +89,16 @@ class MainViewer:
         # videos = render_to_string('rstr/video.html', {'width' : '320', 'height' : '240', 'controls' : True, 'src': 'file:///home/i02sopop/Downloads/PiTP - 2009 - Monday, July 13, 2009 - Kernighan.hi.mp4'})
         # return render_to_string('rstr/section.html', {'title' : 'Videos', 'content' : videos})
         return ''
+
+    def getMyVideos(self):
+        content = ''
+        try:
+            myVideos = video.objects.filter(id_owner = self.session_data['user'])
+            content = render_to_string('rstr/myVideo.html', {'videos' : myVideos, 'session' : self.session_data}).encode('utf-8')
+        except video.DoesNotExist:
+            pass
+        return render_to_string('rstr/section.html', {'title' : 'Mis vídeos', 'content' : content})
+
+    def getUploadVideo(self):
+        content = render_to_string('rstr/uploadVideo.html', {'session' : self.session_data})
+        return render_to_string('rstr/section.html', {'title' : 'Subir vídeo', 'content' : content})
