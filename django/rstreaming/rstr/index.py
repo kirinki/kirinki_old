@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+__license__ = "GNU General Public License, Ver.3"
+__author__ = "Pablo Alvarez de Sotomayor Posadillo"
+
 import logging
 from django.contrib import messages
 from django.template import RequestContext
@@ -19,7 +23,7 @@ class IndexView():
             request.session['isConfig'] = True
         leftBlocks = []
         if not request.session['user'].is_authenticated():
-            leftBlocks = [render_to_string('rstr/section.html', {'title' : 'login', 'content': render_to_string('rstr/login.html', {'form' : LoginForm(), 'session' : request.session}, context_instance=RequestContext(request))})]
+            leftBlocks = [render_to_string('rstr/section.html', {'title' : 'login', 'content': render_to_string('rstr/form.html', {'form' : LoginForm(), 'session' : request.session}, context_instance=RequestContext(request))})]
         centerBlocks = [render_to_string('rstr/section.html', {'title' : 'Bienvenido', 'content' : 'Bienvenido a Ritho\'s Streaming, el sitio desde el cual podras hacer Streaming tanto en directo como en diferido de manera sencilla..'})]
         rightBlocks = [self.generateArticles(), self.generateVideos()]
         self.render = MainViewer(request).render(leftBlocks, centerBlocks, rightBlocks)

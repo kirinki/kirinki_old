@@ -2,7 +2,7 @@
 {% load cache %}
 {% get_current_language as LANGUAGE_CODE %}
 
-<form action="{{ session.base_url }}/login" method="post">
+<form action="{{ action|default_if_none:'' }}" method="post">
   {% csrf_token %}
   {% for hidden in form.hidden_fields %}
   {{ hidden }}
@@ -12,7 +12,11 @@
     <tr>
       <td class="tag">{{ field.label_tag }}: </td>
       <td class="field">{{ field }}</td>
-      <td>{{ field.errors }}</td>
+      <td class="errors">
+	{% for error in form.subject.errors %}
+        <span>{{ error|escape }}</span>
+	{% endfor %}
+      </td>
     </tr>
     {% endfor %}
     <tr><td colspan="3"><input type="submit" /></td></tr>

@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+__license__ = "GNU General Public License, Ver.3"
+__author__ = "Pablo Alvarez de Sotomayor Posadillo"
+
 import logging
 from django import forms
 from django.core import validators
@@ -7,6 +11,7 @@ from django.contrib import messages
 from django.template import RequestContext
 from django.core.mail import send_mail
 from recaptcha.client import captcha
+from django.forms.util import ErrorList
 from django.contrib.auth import login
 from django.contrib.auth import authenticate
 from django.template.loader import render_to_string
@@ -15,20 +20,30 @@ from django.contrib.auth.models import User
 from rstr.config import Config
 from rstr.mainviewer import MainViewer
 
+class ErrorClear(ErrorList):
+    def __str__(self):
+        return self.as_clear().encode('utf-8')
+    def as_clear(self):
+        if not self:
+            return ''
+        return ''.join(['%s' % e for e in self])
+
 class LoginForm(forms.Form):
     username = forms.CharField(label='username',
                                min_length=3,
                                max_length=30,
-                               required=False)
+                               required=True,
+                               error_messages={'invalid': 'The username must have between 3 and 30 characters.'})
     password = forms.CharField(label='password',
-                            widget=forms.PasswordInput,
-                            min_length=5,
-                            max_length=60,
-                            required=False)
+                               widget=forms.PasswordInput,
+                               min_length=5,
+                               max_length=60,
+                               required=True,
+                               error_messages={'invalid': 'The password must have between 5 and 60 characters.'})
 
 class LoginView():
     def __init__(self, request):
-        form = LoginForm(request.POST)
+        form = LoginForm(request.POST, error_class=ErrorClear)
         if request.method == 'POST':
             logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
             logging.debug('Login POST')
@@ -66,7 +81,8 @@ class LoginView():
                     else:
                         self.render = HttpResponseRedirect('/rstr/index')
             else:
-                messages.add_message(request, messages.ERROR, 'Username or password error bis.')
+                for error in form.errors:
+                    messages.add_message(request, messages.ERROR, 'Error en ' + error + ': ' + str(form._errors[error]))
                 if request.META.get('HTTP_REFERER', False) is not False:
                     self.render = HttpResponseRedirect(request.META['HTTP_REFERER'])
                 else:
@@ -81,13 +97,41 @@ class LoginView():
                 request.session['isConfig'] = True
             centerBlocks = []
             if not request.session['user'].is_authenticated():
-                centerBlocks = [render_to_string('rstr/section.html', {'title' : 'Login', 'content': render_to_string('rstr/login.html', {'form' : form, 'session' : request.session}, context_instance=RequestContext(request))})]
+                centerBlocks = [render_to_string('rstr/section.html', {'title' : 'Login', 'content': render_to_string('rstr/form.html', {'form' : form, 'action' : request.session['base_url']+'/login'}, context_instance=RequestContext(request))})]
             self.render = MainViewer(request).render([],centerBlocks,[])
         else:
             raise Http404
 
     def getRender(self):
         return self.render
+
+class RegisterForm(forms.Form):
+    username = forms.CharField(label='username',
+                               min_length=3,
+                               max_length=30,
+                               required=False)
+    fname = forms.CharField(label='first name',
+                            min_length=3,
+                            max_length=30,
+                            required=False)
+    lname = forms.CharField(label='last name',
+                            min_length=3,
+                            max_length=30,
+                            required=False)
+    email = forms.CharField(label='email',
+                            min_length=3,
+                            max_length=30,
+                            required=False)
+    password = forms.CharField(label='password',
+                            widget=forms.PasswordInput,
+                            min_length=5,
+                            max_length=60,
+                            required=False)
+    rpassword = forms.CharField(label='repeat password',
+                                widget=forms.PasswordInput,
+                                min_length=5,
+                                max_length=60,
+                                required=False)
 
 class RegisterView():
     def __init__(self, request):
