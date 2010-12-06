@@ -44,6 +44,9 @@ def streaming(request):
 def videos(request):
     return VideosView(request).getRender()
 
+def viewVideo(request,key):
+    return VideosView(request,key).getRender()
+
 @user_passes_test(lambda u: u.is_authenticated(),'index')
 def stream(request):
     return StreamView(request).getRender()

@@ -6,7 +6,7 @@
 {% if videos %}
 {% for video in videos %}
 <li>
-  <a href="{{ session.base_url }}/videos?id={{ video.idVideo }}">{{ video.name }}</a>
+  <p><a href="{{ session.base_url }}/videos/{{ video.idVideo }}">{{ video.name }}</a></p>
   <date>{{ video.pub_date|date:"D d M Y H:i" }}</date>
   <p>{{ video.description }}</p>
 </li>

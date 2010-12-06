@@ -155,3 +155,22 @@ footer {
 #recaptcha_area {
     margin: auto;
 }
+
+.video_list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.video_list p{
+    padding: 0;
+    margin: 0;
+}
+
+.video_list date{
+    font-size: 13px;
+    font-style: italic;
+    color: #777;
+    padding: 0;
+    margin: 0;
+}

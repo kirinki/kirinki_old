@@ -8,8 +8,7 @@ import logging
 from datetime import datetime, timedelta
 
 from django import forms
-from django.http import HttpResponse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import messages
 from django.template import RequestContext
 from django.core.mail import send_mail

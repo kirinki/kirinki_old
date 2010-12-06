@@ -6,6 +6,7 @@ import logging
 from datetime import datetime
 
 from django import forms
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import messages
 from django.template import RequestContext
 from django.template.loader import render_to_string
@@ -34,7 +35,7 @@ class StreamingView():
         return self.render
 
 class VideosView():
-    def __init__(self, request):
+    def __init__(self, request, key=None):
         logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
         messages.set_level(request, messages.INFO)
         if request.session.get('isConfig', False) is False:
@@ -69,11 +70,11 @@ class UploadForm(forms.Form):
                                min_length=5,
                                max_length=80,
                                required=True)
-    description = forms.CharField(label='Descripción:',
+    description = forms.CharField(label='Descripción',
                                   min_length=5,
                                   max_length=250,
                                   required=True)
-    fileUpload = forms.FileField(label='Fichero:',
+    fileUpload = forms.FileField(label='Fichero',
                                  required=True)
 
 class UploadView():
@@ -87,10 +88,10 @@ class UploadView():
                 request.session.update(data)
                 request.session['isConfig'] = True
             leftBlocks = [self.getMyVideos(request.session)]
-            centerBlocks = [self.getUploadVideo(request.session['base_url'])]
+            centerBlocks = [self.getUploadVideo(request.session['base_url'], request)]
             self.render = MainViewer(request).render(leftBlocks, centerBlocks, [])
         elif request.method == 'POST':
-            form = UploadForm(request.POST, error_class=ErrorClear)
+            form = UploadForm(request.POST, request.FILES, error_class=ErrorClear)
             if form.is_valid():
                 upFile = request.FILES['fileUpload']
                 if upFile.size > 0:
@@ -102,14 +103,15 @@ class UploadView():
                     for chunk in upFile.chunks():
                         destination.write(chunk)
                     destination.close()
-                    v = video(name=form.cleaned_data['name'], description=form.cleaned_data['description'], path=path, format=upFile.content_type, pub_date=datetime.now(), owner=request.session['user'])
+                    v = video(name=form.cleaned_data['title'], description=form.cleaned_data['description'], path=path, format=upFile.content_type, pub_date=datetime.now(), owner=request.session['user'])
+                    v.save()
             else:
                 for error in form.errors:
                     messages.add_message(request, messages.ERROR, 'Error en ' + error + ': ' + str(form._errors[error]))
-                if request.META.get('HTTP_REFERER', False) is not False:
-                    self.render = HttpResponseRedirect(request.META['HTTP_REFERER'])
-                else:
-                    self.render = HttpResponseRedirect('/rstr/index')            
+            if request.META.get('HTTP_REFERER', False) is not False:
+                self.render = HttpResponseRedirect(request.META['HTTP_REFERER'])
+            else:
+                self.render = HttpResponseRedirect('/rstr/index')            
         else:
             raise Http404
 
@@ -122,8 +124,8 @@ class UploadView():
             pass
         return render_to_string('rstr/section.html', {'title' : 'Mis vídeos', 'content' : content})
 
-    def getUploadVideo(self, base_url):
-        content = render_to_string('rstr/form.html', {'form' : UploadForm(), 'action' : base_url + '/upload'})
+    def getUploadVideo(self, base_url, request):
+        content = render_to_string('rstr/form.html', {'form' : UploadForm(request.POST, request.FILES, error_class=ErrorClear), 'action' : base_url + '/upload', 'upload' : True}, context_instance=RequestContext(request))
         return render_to_string('rstr/section.html', {'title' : 'Subir vídeo', 'content' : content})
 
     def getRender(self):

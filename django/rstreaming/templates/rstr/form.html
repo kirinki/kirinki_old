@@ -2,7 +2,7 @@
 {% load cache %}
 {% get_current_language as LANGUAGE_CODE %}
 
-<form action="{{ action|default_if_none:'' }}" method="post">
+<form action="{{ action|default_if_none:'' }}" method="post" {% if upload %} enctype="multipart/form-data" {% endif%}>
   {% csrf_token %}
   {% for hidden in form.hidden_fields %}
   {{ hidden }}
