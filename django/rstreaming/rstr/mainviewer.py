@@ -23,13 +23,7 @@ class MainViewer:
         centerBlocks = []
         rightBlocks = []
 
-        if out == 'index':
-            if not self.session_data['user'].is_authenticated():
-                leftBlocks = [render_to_string('rstr/section.html', {'title' : 'login', 'content': render_to_string('rstr/login.html', {'session' : self.session_data}, context_instance=RequestContext(self.request))})]
-            centerBlocks = [render_to_string('rstr/section.html', {'title' : 'Bienvenido', 'content' : 'Bienvenido a Ritho\'s Streaming, el sitio desde el cual podras hacer Streaming tanto en directo como en diferido de manera sencilla..'})]
-            rightBlocks = [self.generateArticles(), self.generateVideos()]
-
-        elif out == 'register':
+        if out == 'register':
             if not self.session_data['user'].is_authenticated():
                 centerBlocks = [render_to_string('rstr/section.html', {'title' : 'Register', 'content': render_to_string('rstr/register.html', {'session' : self.session_data, 'captcha' : captcha.displayhtml('6LefRr8SAAAAAMncFelaGsop60Uuon0MCL6H-aP3')}, context_instance=RequestContext(self.request))})]
 
@@ -70,16 +64,6 @@ class MainViewer:
 
     def getRightCol(self, blocks = []):
         return render_to_string('rstr/right.html', {'blocks' : blocks})
-
-    def generateArticles(self):
-        # article = render_to_string('rstr/article.html', {'title' : 'Inicio del proyecto', 'date' : '2010-12-01','abstract' : 'Con la inauguracion de esta oficial comienza su andadura el proyecto.', 'content' : 'Explicacion del proyecto RStreaming'})
-        # return render_to_string('rstr/section.html', {'title' : 'Ultimas noticias', 'content' : article})
-        return ''
-
-    def generateVideos(self):
-        # videos = render_to_string('rstr/video.html', {'width' : '320', 'height' : '240', 'controls' : True, 'src': 'file:///home/i02sopop/Downloads/PiTP - 2009 - Monday, July 13, 2009 - Kernighan.hi.mp4'})
-        # return render_to_string('rstr/section.html', {'title' : 'Videos', 'content' : videos})
-        return ''
 
     def getMyVideos(self):
         content = ''

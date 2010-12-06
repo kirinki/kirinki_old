@@ -19,6 +19,7 @@ from recaptcha.client import captcha
 from django.core.mail import send_mail
 from rstr.config import Config
 from rstr.mainviewer import MainViewer
+from rstr.index import IndexView
 from rstr.user import LoginView
 import logging
 
@@ -27,15 +28,7 @@ import logging
 @never_cache
 @vary_on_cookie
 def index(request):
-    logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
-    messages.set_level(request, messages.INFO)
-    #request.session.clear()
-    if request.session.get('isConfig', False) is False:
-        request.session.set_expiry(600)
-        data = Config(request.session).getSessionData()
-        request.session.update(data)
-        request.session['isConfig'] = True
-    return MainViewer(request).getViewer('index')
+    return IndexView(request).getRender()
 
 @user_passes_test(lambda u: u.is_anonymous(),'index')
 def auth_login(request):
