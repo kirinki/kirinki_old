@@ -4,9 +4,17 @@
 
 <form action="{{ session.base_url }}/login" method="post">
   {% csrf_token %}
+  {% for hidden in form.hidden_fields %}
+  {{ hidden }}
+  {% endfor %}
   <table class="form">
-    <tr><td class="tag">Login: </td><td class="field"><input type="text" name="username"></td></tr>
-    <tr><td class="tag">Password: </td><td class="field"><input type="password" name="password"></td></tr>
-    <tr><td colspan="2"><input type="submit" /></td></tr>
+    {% for field in form.visible_fields %}
+    <tr>
+      <td class="tag">{{ field.label_tag }}: </td>
+      <td class="field">{{ field }}</td>
+      <td>{{ field.errors }}</td>
+    </tr>
+    {% endfor %}
+    <tr><td colspan="3"><input type="submit" /></td></tr>
   </table>
 </form>

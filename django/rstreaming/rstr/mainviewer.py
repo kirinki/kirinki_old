@@ -13,10 +13,10 @@ from rstr.models import video
 import logging
 
 class MainViewer:
-    def __init__(self, req, session):
+    def __init__(self, req):
         logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
         self.request = req
-        self.session_data = session
+        self.session_data = req.session
         
     def getViewer(self, out):
         leftBlocks = []
@@ -28,10 +28,6 @@ class MainViewer:
                 leftBlocks = [render_to_string('rstr/section.html', {'title' : 'login', 'content': render_to_string('rstr/login.html', {'session' : self.session_data}, context_instance=RequestContext(self.request))})]
             centerBlocks = [render_to_string('rstr/section.html', {'title' : 'Bienvenido', 'content' : 'Bienvenido a Ritho\'s Streaming, el sitio desde el cual podras hacer Streaming tanto en directo como en diferido de manera sencilla..'})]
             rightBlocks = [self.generateArticles(), self.generateVideos()]
-
-        elif out == 'login':
-            if not self.session_data['user'].is_authenticated():
-                centerBlocks = [render_to_string('rstr/section.html', {'title' : 'Login', 'content': render_to_string('rstr/login.html', {'session' : self.session_data}, context_instance=RequestContext(self.request))})]
 
         elif out == 'register':
             if not self.session_data['user'].is_authenticated():
@@ -64,12 +60,7 @@ class MainViewer:
         else:
             raise Http404
 
-        self.page = render_to_response('rstr/index.html', {'copy' : '&copy; Pablo Alvarez de Sotomayor Posadillo',
-                                                           'session' : self.session_data,
-                                                           'leftCol' : self.getLeftCol(leftBlocks),
-                                                           'centerCol' : self.getCenterCol(centerBlocks),
-                                                           'rightCol' : self.getRightCol(rightBlocks)}, context_instance=RequestContext(self.request))
-        return self.page
+        return self.render(leftBlocks, centerBlocks, rightBlocks)
 
     def getLeftCol(self, blocks = []):
         return render_to_string('rstr/left.html', {'blocks' : blocks})
@@ -102,3 +93,11 @@ class MainViewer:
     def getUploadVideo(self):
         content = render_to_string('rstr/uploadVideo.html', {'session' : self.session_data})
         return render_to_string('rstr/section.html', {'title' : 'Subir vídeo', 'content' : content})
+
+    def render(self, leftBlocks, centerBlocks, rightBlocks):
+        self.page = render_to_response('rstr/index.html', {'copy' : '&copy; Pablo Alvarez de Sotomayor Posadillo',
+                                                           'session' : self.session_data,
+                                                           'leftCol' : self.getLeftCol(leftBlocks),
+                                                           'centerCol' : self.getCenterCol(centerBlocks),
+                                                           'rightCol' : self.getRightCol(rightBlocks)}, context_instance=RequestContext(self.request))
+        return self.page

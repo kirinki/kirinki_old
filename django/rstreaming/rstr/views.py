@@ -8,8 +8,6 @@ from django.views.decorators.vary import vary_on_cookie
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate
-from django.contrib.auth import login
 from django.contrib.auth import logout
 from django.http import HttpResponseRedirect
 from django.http import HttpResponse
@@ -21,6 +19,7 @@ from recaptcha.client import captcha
 from django.core.mail import send_mail
 from rstr.config import Config
 from rstr.mainviewer import MainViewer
+from rstr.user import LoginView
 import logging
 
 # @vary_on_header s('Cookie')
@@ -36,55 +35,12 @@ def index(request):
         data = Config(request.session).getSessionData()
         request.session.update(data)
         request.session['isConfig'] = True
-    return MainViewer(request, request.session).getViewer('index')
+    return MainViewer(request).getViewer('index')
 
 @user_passes_test(lambda u: u.is_anonymous(),'index')
 def auth_login(request):
-    if request.method == 'POST':
-        if request.session['user'].is_authenticated():
-            messages.add_message(request, messages.ERROR, 'User already logged in')
-            if request.META.get('HTTP_REFERER', False) is not False:
-                return HttpResponseRedirect(request.META['HTTP_REFERER'])
-            else:
-                return HttpResponseRedirect('/rstr/index')
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            if user.is_active:
-                login(request, user)
-                messages.add_message(request, messages.INFO, 'User logged in')
-                request.session['user'] = user
-                if request.META.get('HTTP_REFERER', False) is not False:
-                    return HttpResponseRedirect(request.META['HTTP_REFERER'])
-                else:
-                    return HttpResponseRedirect('/rstr/index')
-            else:
-                # Return a 'disabled account' error message
-                messages.add_message(request, messages.ERROR, 'Your account is disabled.')
-                if request.META.get('HTTP_REFERER', False) is not False:
-                    return HttpResponseRedirect(request.META['HTTP_REFERER'])
-                else:
-                    return HttpResponseRedirect('/rstr/index')
-        else:
-            # Return an 'invalid login' error message.
-            messages.add_message(request, messages.ERROR, 'Username or password error.')
-            if request.META.get('HTTP_REFERER', False) is not False:
-                return HttpResponseRedirect(request.META['HTTP_REFERER'])
-            else:
-                return HttpResponseRedirect('/rstr/index')
-    elif request.method == 'GET':
-        logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
-        messages.set_level(request, messages.INFO)
-        if request.session.get('isConfig', False) is False:
-            request.session.set_expiry(600)
-            data = Config(request.session).getSessionData()
-            request.session.update(data)
-            request.session['isConfig'] = True
-        return MainViewer(request, request.session).getViewer('login')
-    else:
-        raise Http404
-
+    return LoginView(request).getRender()
+    
 @user_passes_test(lambda u: u.is_authenticated(),'index')
 def auth_logout(request):
     if request.session['user'].is_authenticated():
@@ -111,7 +67,7 @@ def reg(request):
             data = Config(request.session).getSessionData()
             request.session.update(data)
             request.session['isConfig'] = True
-        return MainViewer(request, request.session).getViewer('register')
+        return MainViewer(request).getViewer('register')
     elif request.method == 'POST':
         if request.POST['password'] != request.POST['repeat_password']:
             messages.add_message(request, messages.INFO, 'User not registered. Passwords doesn\'t match.')
@@ -176,7 +132,7 @@ def streaming(request):
         data = Config(request.session).getSessionData()
         request.session.update(data)
         request.session['isConfig'] = True
-    return MainViewer(request, request.session).getViewer('streaming')
+    return MainViewer(request).getViewer('streaming')
 
 def videos(request):
     logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
@@ -186,7 +142,7 @@ def videos(request):
         data = Config(request.session).getSessionData()
         request.session.update(data)
         request.session['isConfig'] = True
-    return MainViewer(request, request.session).getViewer('videos')
+    return MainViewer(request).getViewer('videos')
 
 @user_passes_test(lambda u: u.is_authenticated(),'index')
 def stream(request):
@@ -197,18 +153,7 @@ def stream(request):
         data = Config(request.session).getSessionData()
         request.session.update(data)
         request.session['isConfig'] = True
-    return MainViewer(request, request.session).getViewer('stream')
-
-@user_passes_test(lambda u: u.is_authenticated(),'index')
-def upload(request):
-    logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
-    messages.set_level(request, messages.INFO)
-    if request.session.get('isConfig', False) is False:
-        request.session.set_expiry(600)
-        data = Config(request.session).getSessionData()
-        request.session.update(data)
-        request.session['isConfig'] = True
-    return MainViewer(request, request.session).getViewer('upload')
+    return MainViewer(request).getViewer('upload')
 
 @user_passes_test(lambda u: u.is_superuser,'index')
 def admin(request):
@@ -219,7 +164,7 @@ def admin(request):
         data = Config(request.session).getSessionData()
         request.session.update(data)
         request.session['isConfig'] = True
-    return MainViewer(request, request.session).getViewer('admin')
+    return MainViewer(request).getViewer('admin')
 
 @user_passes_test(lambda u: u.is_authenticated(),'index')
 def account(request):
@@ -230,4 +175,4 @@ def account(request):
         data = Config(request.session).getSessionData()
         request.session.update(data)
         request.session['isConfig'] = True
-    return MainViewer(request, request.session).getViewer('account')
+    return MainViewer(request).getViewer('account')
