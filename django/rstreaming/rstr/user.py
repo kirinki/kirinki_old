@@ -47,7 +47,19 @@ class LoginForm(forms.Form):
 class LoginView():
     def __init__(self, request):
         form = LoginForm(request.POST, error_class=ErrorClear)
-        if request.method == 'POST':
+        if request.method == 'GET':
+            logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
+            messages.set_level(request, messages.INFO)
+            if request.session.get('isConfig', False) is False:
+                request.session.set_expiry(600)
+                data = Config(request.session).getSessionData()
+                request.session.update(data)
+                request.session['isConfig'] = True
+            centerBlocks = []
+            if not request.session['user'].is_authenticated():
+                centerBlocks = [render_to_string('rstr/section.html', {'title' : 'Login', 'content': render_to_string('rstr/form.html', {'form' : form, 'action' : request.session['base_url']+'/login'}, context_instance=RequestContext(request))})]
+            self.render = MainViewer(request).render([],centerBlocks,[])
+        elif request.method == 'POST':
             logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
             logging.debug('Login POST')
             if request.session['user'].is_authenticated():
@@ -88,18 +100,6 @@ class LoginView():
                     self.render = HttpResponseRedirect(request.META['HTTP_REFERER'])
                 else:
                     self.render = HttpResponseRedirect('/rstr/index')            
-        elif request.method == 'GET':
-            logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
-            messages.set_level(request, messages.INFO)
-            if request.session.get('isConfig', False) is False:
-                request.session.set_expiry(600)
-                data = Config(request.session).getSessionData()
-                request.session.update(data)
-                request.session['isConfig'] = True
-            centerBlocks = []
-            if not request.session['user'].is_authenticated():
-                centerBlocks = [render_to_string('rstr/section.html', {'title' : 'Login', 'content': render_to_string('rstr/form.html', {'form' : form, 'action' : request.session['base_url']+'/login'}, context_instance=RequestContext(request))})]
-            self.render = MainViewer(request).render([],centerBlocks,[])
         else:
             raise Http404
 
@@ -243,6 +243,34 @@ class ActivationView():
         except UserProfile.DoesNotExist:
             messages.add_message(request, messages.INFO, 'User Profile does not exists')
         self.render = HttpResponseRedirect('/rstr/index')
+
+    def getRender(self):
+        return self.render
+
+class AdminView():
+    def __init__(self, request):
+        logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
+        messages.set_level(request, messages.INFO)
+        if request.session.get('isConfig', False) is False:
+            request.session.set_expiry(600)
+            data = Config(request.session).getSessionData()
+            request.session.update(data)
+            request.session['isConfig'] = True
+        self.render = MainViewer(request).render([],[],[])
+
+    def getRender(self):
+        return self.render
+
+class AccountView():
+    def __init__(self, request):
+        logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
+        messages.set_level(request, messages.INFO)
+        if request.session.get('isConfig', False) is False:
+            request.session.set_expiry(600)
+            data = Config(request.session).getSessionData()
+            request.session.update(data)
+            request.session['isConfig'] = True
+        self.render = MainViewer(request).render([],[],[])
 
     def getRender(self):
         return self.render
