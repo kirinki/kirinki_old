@@ -14,6 +14,7 @@ from django.core.mail import send_mail
 from recaptcha.client import captcha
 from django.forms.util import ErrorList
 from django.contrib.auth import login
+from django.contrib.auth import logout
 from django.contrib.auth import authenticate
 from django.template.loader import render_to_string
 from django.contrib.auth.models import User
@@ -204,6 +205,25 @@ class RegisterView():
                         self.render = HttpResponseRedirect('/rstr/index')
         else:
             raise Http404
+
+    def getRender(self):
+        return self.render
+
+class LogoutView():
+    def __init__(self, request):
+        if request.session['user'].is_authenticated():
+            logout(request)
+            messages.add_message(request, messages.INFO, 'User logged out.')
+            if request.META.get('HTTP_REFERER', False) is not False:
+                self.render = HttpResponseRedirect(request.META['HTTP_REFERER'])
+            else:
+                self.render = HttpResponseRedirect('/rstr/index')
+        else:
+            messages.add_message(request, messages.ERROR, 'User not logged in.')
+            if request.META.get('HTTP_REFERER', False) is not False:
+                self.render = HttpResponseRedirect(request.META['HTTP_REFERER'])
+            else:
+                self.render = HttpResponse('/rstr/logout')
 
     def getRender(self):
         return self.render

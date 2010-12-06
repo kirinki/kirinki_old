@@ -8,7 +8,6 @@ from django.views.decorators.vary import vary_on_cookie
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.models import User
-from django.contrib.auth import logout
 from django.http import HttpResponseRedirect
 from django.http import HttpResponse
 from django.contrib import messages
@@ -17,6 +16,7 @@ from rstr.config import Config
 from rstr.mainviewer import MainViewer
 from rstr.index import IndexView
 from rstr.user import LoginView
+from rstr.user import LogoutView
 from rstr.user import RegisterView
 from rstr.user import ActivationView
 import logging
@@ -34,19 +34,7 @@ def auth_login(request):
     
 @user_passes_test(lambda u: u.is_authenticated(),'index')
 def auth_logout(request):
-    if request.session['user'].is_authenticated():
-        logout(request)
-        messages.add_message(request, messages.INFO, 'User logged out.')
-        if request.META.get('HTTP_REFERER', False) is not False:
-            return HttpResponseRedirect(request.META['HTTP_REFERER'])
-        else:
-            return HttpResponseRedirect('/rstr/index')
-    else:
-        messages.add_message(request, messages.ERROR, 'User not logged in.')
-        if request.META.get('HTTP_REFERER', False) is not False:
-            return HttpResponseRedirect(request.META['HTTP_REFERER'])
-        else:
-            return HttpResponse('/rstr/logout')
+    return LogoutView(request).getRender()
 
 @user_passes_test(lambda u: u.is_anonymous(),'index')
 def reg(request):
