@@ -7,7 +7,6 @@ from django.conf.urls.defaults import *
 
 urlpatterns = patterns('rstr.views',
                        (r'^/*$', 'index'),
-                       (r'^/index/*$', 'index'),
                        (r'^index/*$', 'index'),
                        (r'^login/*$', 'auth_login'),
                        (r'^logout/*$', 'auth_logout'),
@@ -18,7 +17,7 @@ urlpatterns = patterns('rstr.views',
                        (r'^upload/*$', 'upload'),
                        (r'^admin/*$', 'admin'),
                        (r'^account/*$', 'account'),
-                       (r'^account/confirm/$(?P<key>\w+)/*$', 'activate'),
+                       (r'^account/confirm/(?P<key>\w+)$', 'activate'),
                        # (r'^/*$', cache_page('index',60*5)), # Vista cacheada 5 minutos
                        # (r'^$(?P<parametro>\d+)/$', 'index'),
                        )

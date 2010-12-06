@@ -2,8 +2,10 @@
 __license__ = "GNU General Public License, Ver.3"
 __author__ = "Pablo Alvarez de Sotomayor Posadillo"
 
+import sha
+import random
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from django import forms
 from django.http import HttpResponse
@@ -16,6 +18,7 @@ from django.contrib.auth import login, logout
 from django.contrib.auth import authenticate
 from django.template.loader import render_to_string
 from django.contrib.auth.models import User
+from django.contrib.auth.models import Group
 
 from rstr.config import Config
 from rstr.common import ErrorClear
@@ -138,20 +141,24 @@ class RegisterView():
             if not request.session['user'].is_authenticated():
                 centerBlocks = [render_to_string('rstr/section.html',
                                                  {'title' : 'Register',
-                                                  'content': render_to_string('rstr/form.html', {'form' : form, 'action' : request.session['base_url']+'/register', 'captcha' : captcha.displayhtml('6LefRr8SAAAAAMncFelaGsop60Uuon0MCL6H-aP3')})},
-                                                 context_instance=RequestContext(request))]
+                                                  'content': render_to_string('rstr/form.html', {'form' : form, 'action' : request.session['base_url']+'/register', 'captcha' : captcha.displayhtml('6LefRr8SAAAAAMncFelaGsop60Uuon0MCL6H-aP3')},
+                                                                              context_instance=RequestContext(request))})]
             self.render = MainViewer(request).render([],centerBlocks,[])
         elif request.method == 'POST':
             if form.is_valid():
-                if form.cleaned_data['password'] is not form.cleaned_data['rpassword']:
+                logging.debug('Form valid')
+                if form.cleaned_data['password'] != form.cleaned_data['rpassword']:
+                    logging.debug('Passwords doesn\'t match')
                     messages.add_message(request, messages.INFO, 'Passwords doesn\'t match.')
                 else:
+                    logging.debug('Passwords match')
                     remote_ip = request.META['REMOTE_ADDR']
                     challenge = request.REQUEST.get('recaptcha_challenge_field')
                     response = request.REQUEST.get('recaptcha_response_field')
                     recaptcha_response = captcha.submit(challenge, response, '6LefRr8SAAAAAPpY8WNoxo19nh0Rre5BCB9JfLJV', remote_ip)
 
                     if recaptcha_response.is_valid:
+                        logging.debug('Recaptcha is valid')
                         try:
                             User.objects.get(username=form.cleaned_data['username'])
                         except User.DoesNotExist:
@@ -159,46 +166,45 @@ class RegisterView():
                             user.is_active = False
                             user.first_name = form.cleaned_data['first_name']
                             user.last_name = form.cleaned_data['last_name']
-                            user.groups.add(Group.object.get(name='users'))
+                            user.groups.add(Group.objects.get(name='users'))
                             user.save()
 
                             salt = sha.new(str(random.random())).hexdigest()[:5]
-                            activation_key = sha.new(salt+new_user.username).hexdigest()
-                            key_expires = datetime.datetime.today() + datetime.timedelta(2)
+                            activation_key = sha.new(salt+user.username).hexdigest()
+                            key_expires = datetime.today() + timedelta(2)
                             
                             new_profile = UserProfile(user=user,
                                                       activation_key=activation_key,
                                                       key_expires=key_expires)
                             new_profile.save()
-
+                            
                             email_subject = 'Ritho\'s Streaming account confirmation'
-                            email_body = "Hello, %s, and thanks for signing up for an rstreaming.ritho.net account!\n\nTo activate your account, click this link within 48 hours:\n\nhttp://rstreaming.ritho.net/rstr/accounts/confirm/%s" % (new_user.username, new_profile.activation_key)
+                            email_body = "Hello, %s, and thanks for signing up for an rstreaming account!\n\nTo activate your account, click this link within 48 hours:\n\n%s/account/confirm/%s" % (user.username, request.session['base_url'], new_profile.activation_key)
                             send_mail(email_subject,
                                       email_body,
                                       'rstr@ritho.net',
-                                      [user.email],
+                                      [user.email.encode('utf-8')],
                                       fail_silently=False)
 
                             messages.add_message(request, messages.INFO, 'User registered. To activate the account please visit the url inicated in your email.')
                     else:
-                        messages.add_message(request, messages.ERROR, 'User not registered. '+recaptcha_response.error_code)
+                        logging.debug('Recaptcha is not valid')
+                        messages.add_message(request, messages.ERROR, 'User not registered. ' + recaptcha_response.error_code)
 
                     if request.session.get('isConfig', False) is False:
                         request.session.set_expiry(600)
                         data = Config(request.session).getSessionData()
                         request.session.update(data)
                         request.session['isConfig'] = True
-                    if request.META.get('HTTP_REFERER', False) is not False:
-                        self.render = HttpResponseRedirect(request.META['HTTP_REFERER'])
-                    else:
-                        self.render = HttpResponseRedirect('/rstr/index')
             else:
+                logging.debug('Form is not valid')
                 for error in form.errors:
                     messages.add_message(request, messages.ERROR, 'Error en ' + error + ': ' + str(form._errors[error]))
-                if request.META.get('HTTP_REFERER', False) is not False:
-                    self.render = HttpResponseRedirect(request.META['HTTP_REFERER'])
-                else:
-                    self.render = HttpResponseRedirect('/rstr/index')
+
+            if request.META.get('HTTP_REFERER', False) is not False:
+                self.render = HttpResponseRedirect(request.META['HTTP_REFERER'])
+            else:
+                self.render = HttpResponseRedirect('/rstr/index')
         else:
             raise Http404
 
@@ -225,7 +231,7 @@ class LogoutView():
         return self.render
 
 class ActivationView():
-    def __init__(self, request):
+    def __init__(self, request, key):
         logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
         try:
             userProfile = UserProfile.objects.get(activation_key=key)
@@ -236,12 +242,18 @@ class ActivationView():
                 user.is_active = True
                 user.save()
                 messages.add_message(request, messages.INFO, 'User '+user.username+' is activated')
+                userProfle.delete()
         except UserProfile.DoesNotExist:
             messages.add_message(request, messages.INFO, 'User Profile does not exists')
         self.render = HttpResponseRedirect('/rstr/index')
 
     def getRender(self):
         return self.render
+
+    def cleanProfiles():
+        profiles = UserProfile.objects.all(key_expires < 0datetime.today())
+        for profile in profiles:
+            profile.delete()
 
 class AdminView():
     def __init__(self, request):

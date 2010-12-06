@@ -36,7 +36,7 @@ def reg(request):
 
 @user_passes_test(lambda u: u.is_anonymous(),'index')
 def activate(request, key):
-    return ActivationView(request).getRender()
+    return ActivationView(request, key).getRender()
 
 def streaming(request):
     return StreamingView(request).getRender()
