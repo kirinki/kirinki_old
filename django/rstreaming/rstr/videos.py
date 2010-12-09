@@ -35,6 +35,43 @@ class StreamingView():
     def getRender(self):
         return self.render
 
+class StrForm(forms.Form):
+    isVideo = forms.BooleanField(label='Emitir Video',
+                                 required=True)
+    srcIP = forms.IPAddressField(label='Ip de origen',
+                                 required=True)
+    srcPort = forms.IntegerField(label='Puerto de origen',
+                                 required=True)
+    vStream = forms.ChoiceField(label='Video a emitir',
+                                choices=[],
+                                required=True)
+
+class StreamView():
+    def __init__(self, request):
+        logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
+        messages.set_level(request, messages.INFO)
+        if request.session.get('isConfig', False) is False:
+            request.session.set_expiry(600)
+            data = Config(request.session).getSessionData()
+            request.session.update(data)
+            request.session['isConfig'] = True
+        form = StrForm()
+        form.fields['isVideo'].initial = False
+        form.fields['srcIP'].initial = request.META['REMOTE_ADDR']
+        form.fields['srcPort'].initial = 9000
+        try:
+            videos = video.objects.filter(owner=request.session['user'])
+            init = []
+            for v in videos:
+                init.append((v.idVideo, v.name))
+            form.fields['vStream'].choices = init
+        except video.DoesNotExist:
+            pass
+        self.render = MainViewer(request).render([], [render_to_string('rstr/form.html', {'form' : form, 'action' : request.session['base_url'] + '/stream', 'id' : 'stream'}, context_instance=RequestContext(request))], [])
+
+    def getRender(self):
+        return self.render
+
 class VideosView():
     LIST = 0
     VIEW = 1
@@ -76,7 +113,7 @@ class VideosView():
                     pass
         elif action == self.DELETE:
                 try:
-                    v = video.objects.get(idVideo=key)
+                    v = video.objects.get(idVideo=key, owner=request.session['user'])
                     name = v.name
                     os.remove(v.path)
                     v.delete()
@@ -88,20 +125,6 @@ class VideosView():
         rightBlocks = []
 
         self.render = MainViewer(request).render(leftBlocks, centerBlocks, rightBlocks)
-
-    def getRender(self):
-        return self.render
-
-class StreamView():
-    def __init__(self, request):
-        logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
-        messages.set_level(request, messages.INFO)
-        if request.session.get('isConfig', False) is False:
-            request.session.set_expiry(600)
-            data = Config(request.session).getSessionData()
-            request.session.update(data)
-            request.session['isConfig'] = True
-        self.render = MainViewer(request).render([], [], [])
 
     def getRender(self):
         return self.render

@@ -17,15 +17,6 @@ class configs(models.Model):
     def __unicode__(self):
         return self.cfgkey
 
-class streaming(models.Model):
-    idVideo = models.AutoField(primary_key=True)
-    src = models.CharField(max_length=100)
-    dest = models.CharField(max_length=100)
-    id_owner = models.ForeignKey(User)
-
-    def __unicode__(self):
-        return self.cfgkey
-
 class video(models.Model):
     idVideo = models.AutoField(primary_key=True)
     name = models.CharField(max_length=80)
@@ -37,3 +28,15 @@ class video(models.Model):
 
     def __unicode__(self):
         return self.name
+
+class streaming(models.Model):
+    idStreaming = models.AutoField(primary_key=True)
+    src = models.IPAddressField()
+    port = models.PositiveIntegerField()
+    mode = models.PositiveSmallIntegerField()
+    video = models.ForeignKey(video)
+    owner = models.ForeignKey(User)
+
+    def __unicode__(self):
+        return self.cfgkey
+
