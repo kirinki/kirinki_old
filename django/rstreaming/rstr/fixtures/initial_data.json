@@ -1,0 +1,82 @@
+[
+  {
+    "model": "rstr.configs",
+    "pk": null,
+    "fields": {
+      "cfgkey": "jquery_src",
+      "cfgvalue": "jqyery.js"
+    }
+  },
+  {
+    "model": "rstr.configs",
+    "pk": null,
+    "fields": {
+      "cfgkey": "jquery_file",
+      "cfgvalue": "rstreaming.js"
+    }
+  },
+  {
+    "model": "rstr.configs",
+    "pk": null,
+    "fields": {
+      "cfgkey": "css_file",
+      "cfgvalue": "style.css"
+    }
+  },
+  {
+    "model": "rstr.configs",
+    "pk": null,
+    "fields": {
+      "cfgkey": "javascript_file",
+      "cfgvalue": "javascript.js"
+    }
+  },
+  {
+    "model": "rstr.configs",
+    "pk": null,
+    "fields": {
+      "cfgkey": "title",
+      "cfgvalue": "Ritho's Streaming"
+    }
+  },
+  {
+    "model": "rstr.configs",
+    "pk": null,
+    "fields": {
+      "cfgkey": "subtitle",
+      "cfgvalue": "Emitiendo en directo"
+    }
+  },
+  {
+    "model": "rstr.configs",
+    "pk": null,
+    "fields": {
+      "cfgkey": "base_url",
+      "cfgvalue": "http://turing.ritho.net/rstr"
+    }
+  },
+  {
+    "model": "rstr.configs",
+    "pk": null,
+    "fields": {
+      "cfgkey": "upload_path",
+      "cfgvalue": "/home/i02sopop/desarrollo/rstreaming/django/rstreaming/upload"
+    }
+  },
+  {
+    "model": "rstr.configs",
+    "pk": null,
+    "fields": {
+      "cfgkey": "strIP",
+      "cfgvalue": "192.168.0.2"
+    }
+  },
+  {
+    "model": "rstr.configs",
+    "pk": null,
+    "fields": {
+      "cfgkey": "strPort",
+      "cfgvalue": "9000"
+    }
+  }
+]
