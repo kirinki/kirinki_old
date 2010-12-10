@@ -38,14 +38,14 @@ class LoginForm(forms.Form):
 class LoginView():
     def __init__(self, request):
         form = LoginForm(request.POST, error_class=ErrorClear)
+        logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
+        messages.set_level(request, messages.INFO)
+        if request.session.get('isConfig', False) is False:
+            request.session.set_expiry(600)
+            data = Config(request.session).getSessionData()
+            request.session.update(data)
+            request.session['isConfig'] = True
         if request.method == 'GET':
-            logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
-            messages.set_level(request, messages.INFO)
-            if request.session.get('isConfig', False) is False:
-                request.session.set_expiry(600)
-                data = Config(request.session).getSessionData()
-                request.session.update(data)
-                request.session['isConfig'] = True
             centerBlocks = []
             if not request.session['user'].is_authenticated():
                 centerBlocks = [render_to_string('rstr/section.html', {'title' : 'Login', 'content': render_to_string('rstr/form.html', {'form' : form, 'action' : request.session['base_url']+'/login'}, context_instance=RequestContext(request))})]
@@ -129,13 +129,13 @@ class RegisterView():
     def __init__(self, request):
         logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
         form = RegisterForm(request.POST, error_class=ErrorClear)
+        if request.session.get('isConfig', False) is False:
+            messages.set_level(request, messages.INFO)
+            request.session.set_expiry(600)
+            data = Config(request.session).getSessionData()
+            request.session.update(data)
+            request.session['isConfig'] = True
         if request.method == 'GET':
-            if request.session.get('isConfig', False) is False:
-                messages.set_level(request, messages.INFO)
-                request.session.set_expiry(600)
-                data = Config(request.session).getSessionData()
-                request.session.update(data)
-                request.session['isConfig'] = True
             centerBlocks = []
             if not request.session['user'].is_authenticated():
                 centerBlocks = [render_to_string('rstr/section.html',
@@ -189,12 +189,6 @@ class RegisterView():
                     else:
                         logging.debug('Recaptcha is not valid')
                         messages.add_message(request, messages.ERROR, 'User not registered. ' + recaptcha_response.error_code)
-
-                    if request.session.get('isConfig', False) is False:
-                        request.session.set_expiry(600)
-                        data = Config(request.session).getSessionData()
-                        request.session.update(data)
-                        request.session['isConfig'] = True
             else:
                 logging.debug('Form is not valid')
                 for error in form.errors:
@@ -212,6 +206,11 @@ class RegisterView():
 
 class LogoutView():
     def __init__(self, request):
+        if request.session.get('isConfig', False) is False:
+            request.session.set_expiry(600)
+            data = Config(request.session).getSessionData()
+            request.session.update(data)
+            request.session['isConfig'] = True
         if request.session['user'].is_authenticated():
             logout(request)
             messages.add_message(request, messages.INFO, 'User logged out.')

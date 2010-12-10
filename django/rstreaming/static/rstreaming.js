@@ -44,10 +44,12 @@ $(document).ready(function() {
 	    if($('#id_isVideo').is(':checked')) {
 		$('#id_srcIP').parent().parent().hide();
 		$('#id_srcPort').parent().parent().hide();
+		$('#id_srcMux').parent().parent().hide();
 		$('#id_vStream').parent().parent().show();
 	    } else {
 		$('#id_srcIP').parent().parent().show();
 		$('#id_srcPort').parent().parent().show();
+		$('#id_srcMux').parent().parent().show();
 		$('#id_vStream').parent().parent().hide();
 	    }
 	}
@@ -58,10 +60,12 @@ $(document).ready(function() {
 	    if($('#id_isVideo').is(':checked')) {
 		$('#id_srcIP').parent().parent().hide();
 		$('#id_srcPort').parent().parent().hide();
+		$('#id_srcMux').parent().parent().hide();
 		$('#id_vStream').parent().parent().show();
 	    } else {
 		$('#id_srcIP').parent().parent().show();
 		$('#id_srcPort').parent().parent().show();
+		$('#id_srcMux').parent().parent().show();
 		$('#id_vStream').parent().parent().hide();
 	    }
 	}

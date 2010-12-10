@@ -31,10 +31,12 @@ class video(models.Model):
 
 class streaming(models.Model):
     idStreaming = models.AutoField(primary_key=True)
-    src = models.IPAddressField()
-    port = models.PositiveIntegerField()
-    mode = models.PositiveSmallIntegerField()
-    video = models.ForeignKey(video)
+    src = models.IPAddressField(null=True)
+    port = models.PositiveIntegerField(null=True)
+    mux = models.CharField(max_length=20)
+    vMode = models.BooleanField()
+    video = models.ForeignKey(video, null=True)
+    pid =  models.IntegerField()
     owner = models.ForeignKey(User)
 
     def __unicode__(self):

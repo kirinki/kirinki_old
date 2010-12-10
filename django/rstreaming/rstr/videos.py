@@ -4,6 +4,7 @@ __author__ = "Pablo Alvarez de Sotomayor Posadillo"
 
 import os
 import logging
+import subprocess
 from datetime import datetime
 
 from django import forms
@@ -15,6 +16,7 @@ from django.template.loader import render_to_string
 from rstr.user import LoginForm
 from rstr.config import Config
 from rstr.common import ErrorClear
+from rstr.models import streaming
 from rstr.models import video
 from rstr.mainviewer import MainViewer
 
@@ -30,6 +32,14 @@ class StreamingView():
         leftBlocks = []
         if not request.session['user'].is_authenticated():
             leftBlocks = [render_to_string('rstr/section.html', {'title' : 'login', 'content': render_to_string('rstr/form.html', {'form' : LoginForm(), 'action' : request.session['base_url'] + '/login'}, context_instance=RequestContext(request))})]
+
+        centerBlocks = []
+        try:
+            videoStr = streaming.objects.all()
+            for video in videoStr:
+                centerBlocks = [render_to_string('rstr/section.html', {'title' : 'login', 'content': str(video.idStreaming)})]
+        except streaming.DoesNotExist:
+            pass
         self.render = MainViewer(request).render(leftBlocks, [], [])
 
     def getRender(self):
@@ -37,11 +47,14 @@ class StreamingView():
 
 class StrForm(forms.Form):
     isVideo = forms.BooleanField(label='Emitir Video',
-                                 required=True)
+                                 required=False)
     srcIP = forms.IPAddressField(label='Ip de origen',
-                                 required=True)
+                                 required=False)
     srcPort = forms.IntegerField(label='Puerto de origen',
-                                 required=True)
+                                 required=False)
+    srcMux = forms.ChoiceField(label='Multiplexor de origen',
+                                choices=[('ogg', 'ogg'), ('ffmpeg{mux=flv}', 'mp4'), ('webm', 'webm')],
+                                 required=False)
     vStream = forms.ChoiceField(label='Video a emitir',
                                 choices=[],
                                 required=True)
@@ -55,19 +68,75 @@ class StreamView():
             data = Config(request.session).getSessionData()
             request.session.update(data)
             request.session['isConfig'] = True
-        form = StrForm()
-        form.fields['isVideo'].initial = False
-        form.fields['srcIP'].initial = request.META['REMOTE_ADDR']
-        form.fields['srcPort'].initial = 9000
+        if request.method == 'GET':
+            form = StrForm(error_class=ErrorClear)
+            form.fields['isVideo'].initial = False
+            form.fields['srcIP'].initial = request.META['REMOTE_ADDR']
+            form.fields['srcPort'].initial = 9000
+            form.fields['vStream'].choices = self.userVideos(request)
+            self.render = MainViewer(request).render([], [render_to_string('rstr/form.html', {'form' : form, 'action' : request.session['base_url'] + '/stream', 'id' : 'stream'}, context_instance=RequestContext(request))], [])
+        elif request.method == 'POST':
+            form = StrForm(request.POST, error_class=ErrorClear)
+            form.fields['isVideo'].initial = False
+            form.fields['srcIP'].initial = request.META['REMOTE_ADDR']
+            form.fields['srcPort'].initial = 9000
+            form.fields['vStream'].choices = self.userVideos(request)
+
+            if form.is_valid():
+                try:
+                    v = video.objects.filter(idVideo=form.cleaned_data['vStream'])[0]
+                except video.DoesNotExist:
+                    v = None
+                if form.cleaned_data['isVideo'] is True and v is not None:
+                    clvc = None
+                    if v.format == 'video/mp4':
+                        cvlc = subprocess.Popen(["/usr/bin/cvlc " + v.path + " --sout '#http{mux=ffmpeg{mux=flv},dst=" + request.session['strIP'] + ":" + request.session['strPort'] + "/} -no-sout-rtp-sap -no-sout-standard-sap -sout-keep' --ttl 12"],
+                                                shell=True)
+                    elif v.format == 'video/webm':
+                        cvlc = subprocess.Popen(["/usr/bin/cvlc " + v.path + " --sout '#http{mux=webm,dst=" + request.session['strIP'] + ":" + request.session['strPort'] + "/} -no-sout-rtp-sap -no-sout-standard-sap -sout-keep' --ttl 12"],
+                                                shell=True)
+                    elif v.format == 'video/ogg':
+                        cvlc = subprocess.Popen(["/usr/bin/cvlc " + v.path + " --sout '#http{mux=ogg,dst=" + request.session['strIP'] + ":" + request.session['strPort'] + "/} -no-sout-rtp-sap -no-sout-standard-sap -sout-keep' --ttl 12"],
+                                                shell=True)
+                    else:
+                        messages.add_message(request, messages.ERROR, 'Video type not supported')
+
+                    if clvc is not None:
+                        vStream = streaming(src=form.cleaned_data['srcIP'], port=form.cleaned_data['srcPort'], mux=form.cleaned_data['srcMux'], vMode=form.cleaned_data['isVideo'], pid=cvlc.pid,video=v, owner=request.session['user'])
+                        vStream.save()
+                        messages.add_message(request, messages.INFO, 'Video streaming')
+                elif form.cleaned_data['isVideo'] is False:
+                    if form.cleaned_data['srcMux'] != "ffmpeg{mux=flv}" and form.cleaned_data['srcMux'] != "webm" and form.cleaned_data['srcMux'] != "ogg":
+                        messages.add_message(request, messages.ERROR, 'Video type not supported')
+                    else:
+                        cvlc = subprocess.Popen(["/usr/bin/cvlc http://" + str(form.cleaned_data['srcIP']) + ":" + str(form.cleaned_data['srcPort']) + " --sout '#http{mux=" + str(form.cleaned_data['srcMux']) + ",dst=" + request.session['strIP'] + ":" + request.session['strPort'] + "/} -no-sout-rtp-sap -no-sout-standard-sap -sout-keep' --ttl 12"],
+                                                shell=True)
+                        vStream = streaming(src=form.cleaned_data['srcIP'], port=form.cleaned_data['srcPort'], mux=form.cleaned_data['srcMux'], vMode=form.cleaned_data['isVideo'], pid=cvlc.pid,video=v, owner=request.session['user'])
+                        vStream.save()
+                        messages.add_message(request, messages.ERROR, 'External video streaming.')
+                else:
+                    messages.add_message(request, messages.ERROR, 'If you select the video mode you must select a video.')
+                # os.waitpid(p.pid, 0)[1]
+                self.render = HttpResponseRedirect('/rstr/streaming')
+            else:
+                for error in form.errors:
+                    messages.add_message(request, messages.ERROR, 'Error en ' + error + ': ' + str(form._errors[error]))
+                if request.META.get('HTTP_REFERER', False) is not False:
+                    self.render = HttpResponseRedirect(request.META['HTTP_REFERER'])
+                else:
+                    self.render = HttpResponseRedirect('/rstr/index')
+        else:
+            raise Http404
+
+    def userVideos(self, request):
+        init = []
         try:
             videos = video.objects.filter(owner=request.session['user'])
-            init = []
             for v in videos:
                 init.append((v.idVideo, v.name))
-            form.fields['vStream'].choices = init
         except video.DoesNotExist:
             pass
-        self.render = MainViewer(request).render([], [render_to_string('rstr/form.html', {'form' : form, 'action' : request.session['base_url'] + '/stream', 'id' : 'stream'}, context_instance=RequestContext(request))], [])
+        return init
 
     def getRender(self):
         return self.render
@@ -143,14 +212,14 @@ class UploadForm(forms.Form):
 
 class UploadView():
     def __init__(self, request):
+        logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
+        messages.set_level(request, messages.INFO)
+        if request.session.get('isConfig', False) is False:
+            request.session.set_expiry(600)
+            data = Config(request.session).getSessionData()
+            request.session.update(data)
+            request.session['isConfig'] = True
         if request.method == 'GET':
-            logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
-            messages.set_level(request, messages.INFO)
-            if request.session.get('isConfig', False) is False:
-                request.session.set_expiry(600)
-                data = Config(request.session).getSessionData()
-                request.session.update(data)
-                request.session['isConfig'] = True
             leftBlocks = [self.getMyVideos(request.session)]
             centerBlocks = [self.getUploadVideo(request.session['base_url'], request)]
             self.render = MainViewer(request).render(leftBlocks, centerBlocks, [])
