@@ -24,7 +24,7 @@ class IndexView():
         leftBlocks = []
         if not request.session['user'].is_authenticated():
             leftBlocks = [render_to_string('rstr/section.html', {'title' : 'login', 'content': render_to_string('rstr/form.html', {'form' : LoginForm(), 'action' : request.session['base_url']+'/login'}, context_instance=RequestContext(request))})]
-        centerBlocks = [render_to_string('rstr/section.html', {'title' : 'Bienvenido', 'content' : 'Bienvenido a Ritho\'s Streaming, el sitio desde el cual podras hacer Streaming tanto en directo como en diferido de manera sencilla..'})]
+        centerBlocks = [render_to_string('rstr/section.html', {'title' : 'Bienvenido', 'content' : '<p>Bienvenido a Ritho\'s Streaming, el sitio desde el cual podras hacer Streaming tanto en directo como en diferido de manera sencilla.</p>'})]
         rightBlocks = [self.generateArticles(), self.generateVideos()]
         self.render = MainViewer(request).render(leftBlocks, centerBlocks, rightBlocks)
 
@@ -41,3 +41,19 @@ class IndexView():
 
     def getRender(self):
         return self.render
+
+# $refer = $_SERVER["HTTP_REFERER"];
+# if (strpos($refer,"google")) {
+# $refer_string = parse_url($refer, PHP_URL_QUERY);
+# parse_str($refer_string, $vars);
+# $search_term = $vars['q'];
+# $rank = $vars['cd'];
+# $site_url = $vars['url'];
+
+# $stmt = $db->prepare("INSERT INTO google_search_log VALUES (:search_term, :rank, :site_url, :results_url)");
+# $stmt->bindParam(':search_term', $search_term);
+# $stmt->bindParam(':rank', $rank);
+# $stmt->bindParam(':site_url', $site_url);
+# $stmt->bindParam(':results_url', 'http://www.google.com/search?q='.urlencode($search_term));
+# $stmt->execute();
+# }
