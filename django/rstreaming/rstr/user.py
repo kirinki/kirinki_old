@@ -58,7 +58,7 @@ class LoginView():
                 if request.META.get('HTTP_REFERER', False) is not False:
                     self.render = HttpResponseRedirect(request.META['HTTP_REFERER'])
                 else:
-                    self.render = HttpResponseRedirect('/rstr/index')
+                    self.render = HttpResponseRedirect('/index')
             if form.is_valid():
                 user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
                 if user is not None:
@@ -69,28 +69,28 @@ class LoginView():
                         if request.META.get('HTTP_REFERER', False) is not False:
                             self.render = HttpResponseRedirect(request.META['HTTP_REFERER'])
                         else:
-                            self.render = HttpResponseRedirect('/rstr/index')
+                            self.render = HttpResponseRedirect('/index')
                     else:
                         # Return a 'disabled account' error message
                         messages.add_message(request, messages.ERROR, 'Your account is disabled.')
                         if request.META.get('HTTP_REFERER', False) is not False:
                             self.render = HttpResponseRedirect(request.META['HTTP_REFERER'])
                         else:
-                            self.render = HttpResponseRedirect('/rstr/index')
+                            self.render = HttpResponseRedirect('/index')
                 else:
                     # Return an 'invalid login' error message.
                     messages.add_message(request, messages.ERROR, 'Username or password error.')
                     if request.META.get('HTTP_REFERER', False) is not False:
                         self.render = HttpResponseRedirect(request.META['HTTP_REFERER'])
                     else:
-                        self.render = HttpResponseRedirect('/rstr/index')
+                        self.render = HttpResponseRedirect('/index')
             else:
                 for error in form.errors:
                     messages.add_message(request, messages.ERROR, 'Error en ' + error + ': ' + str(form._errors[error]))
                 if request.META.get('HTTP_REFERER', False) is not False:
                     self.render = HttpResponseRedirect(request.META['HTTP_REFERER'])
                 else:
-                    self.render = HttpResponseRedirect('/rstr/index')            
+                    self.render = HttpResponseRedirect('/index')            
         else:
             raise Http404
 
@@ -197,7 +197,7 @@ class RegisterView():
             if request.META.get('HTTP_REFERER', False) is not False:
                 self.render = HttpResponseRedirect(request.META['HTTP_REFERER'])
             else:
-                self.render = HttpResponseRedirect('/rstr/index')
+                self.render = HttpResponseRedirect('/index')
         else:
             raise Http404
 
@@ -217,13 +217,13 @@ class LogoutView():
             if request.META.get('HTTP_REFERER', False) is not False:
                 self.render = HttpResponseRedirect(request.META['HTTP_REFERER'])
             else:
-                self.render = HttpResponseRedirect('/rstr/index')
+                self.render = HttpResponseRedirect('/index')
         else:
             messages.add_message(request, messages.ERROR, 'User not logged in.')
             if request.META.get('HTTP_REFERER', False) is not False:
                 self.render = HttpResponseRedirect(request.META['HTTP_REFERER'])
             else:
-                self.render = HttpResponse('/rstr/logout')
+                self.render = HttpResponse('/logout')
 
     def getRender(self):
         return self.render
@@ -244,7 +244,7 @@ class ActivationView():
                 up.delete()
         except UserProfile.DoesNotExist:
             messages.add_message(request, messages.INFO, 'User Profile does not exists')
-        self.render = HttpResponseRedirect('/rstr/index')
+        self.render = HttpResponseRedirect('/index')
 
     def getRender(self):
         return self.render

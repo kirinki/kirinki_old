@@ -117,14 +117,14 @@ class StreamView():
                 else:
                     messages.add_message(request, messages.ERROR, 'If you select the video mode you must select a video.')
                 # os.waitpid(p.pid, 0)[1]
-                self.render = HttpResponseRedirect('/rstr/streaming')
+                self.render = HttpResponseRedirect('/streaming')
             else:
                 for error in form.errors:
                     messages.add_message(request, messages.ERROR, 'Error en ' + error + ': ' + str(form._errors[error]))
                 if request.META.get('HTTP_REFERER', False) is not False:
                     self.render = HttpResponseRedirect(request.META['HTTP_REFERER'])
                 else:
-                    self.render = HttpResponseRedirect('/rstr/index')
+                    self.render = HttpResponseRedirect('/index')
         else:
             raise Http404
 
@@ -244,7 +244,7 @@ class UploadView():
             if request.META.get('HTTP_REFERER', False) is not False:
                 self.render = HttpResponseRedirect(request.META['HTTP_REFERER'])
             else:
-                self.render = HttpResponseRedirect('/rstr/index')            
+                self.render = HttpResponseRedirect('/index')            
         else:
             raise Http404
 
