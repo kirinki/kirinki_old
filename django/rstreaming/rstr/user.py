@@ -232,15 +232,16 @@ class ActivationView():
     def __init__(self, request, key):
         logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
         try:
-            userProfile = UserProfile.objects.get(activation_key=key)
-            if userProfile.key_expires < datetime.today():
+            logging.debug(key)
+            up = UserProfile.objects.get(activation_key=key)
+            if up.key_expires < datetime.today():
                 messages.add_message(request, messages.INFO, 'The activation key has expired.')
             else:
-                user = userProfile.user
+                user = up.user
                 user.is_active = True
                 user.save()
-                messages.add_message(request, messages.INFO, 'User '+user.username+' is activated')
-                userProfle.delete()
+                messages.add_message(request, messages.INFO, 'User ' + user.username + ' is activated')
+                up.delete()
         except UserProfile.DoesNotExist:
             messages.add_message(request, messages.INFO, 'User Profile does not exists')
         self.render = HttpResponseRedirect('/rstr/index')
