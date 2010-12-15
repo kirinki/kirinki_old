@@ -22,12 +22,10 @@ blockquote, q {
     quotes: none;
 }
 
-/* remember to define focus styles! */
 :focus {
     outline: 0;
 }
 
-/* remember to highlight inserts somehow! */
 ins {
     text-decoration: none;
 }
@@ -35,7 +33,6 @@ del {
     text-decoration: line-through;
 }
 
-/* tables still need 'cellspacing="0"' in the markup */
 table {
     border-collapse: collapse;
     border-spacing: 0;
@@ -45,6 +42,7 @@ table {
 
 h1 {
     font-size: 2em;
+    margin-top: 5px;
     margin-bottom: 5px;
 }
 
