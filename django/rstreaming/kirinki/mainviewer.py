@@ -13,21 +13,21 @@ import logging
 
 class MainViewer:
     def __init__(self, req):
-        logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
+        logging.basicConfig(filename='/var/log/kirinki.log',level=logging.DEBUG)
         self.request = req
         self.session_data = req.session
         
     def getLeftCol(self, blocks = []):
-        return render_to_string('rstr/left.html', {'blocks' : blocks})
+        return render_to_string('kirinki/left.html', {'blocks' : blocks})
 
     def getCenterCol(self, blocks = []):
-        return render_to_string('rstr/center.html', {'blocks' : blocks})
+        return render_to_string('kirinki/center.html', {'blocks' : blocks})
 
     def getRightCol(self, blocks = []):
-        return render_to_string('rstr/right.html', {'blocks' : blocks})
+        return render_to_string('kirinki/right.html', {'blocks' : blocks})
 
     def render(self, leftBlocks, centerBlocks, rightBlocks):
-        self.page = render_to_response('rstr/index.html', {'copy' : '&copy; Pablo Alvarez de Sotomayor Posadillo',
+        self.page = render_to_response('kirinki/index.html', {'copy' : '&copy; Pablo Alvarez de Sotomayor Posadillo',
                                                            'session' : self.session_data,
                                                            'leftCol' : self.getLeftCol(leftBlocks),
                                                            'centerCol' : self.getCenterCol(centerBlocks),

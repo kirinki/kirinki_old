@@ -13,16 +13,16 @@ from django.contrib import messages
 from django.template import RequestContext
 from django.template.loader import render_to_string
 
-from rstr.user import LoginForm
-from rstr.config import Config
-from rstr.common import ErrorClear
-from rstr.models import streaming
-from rstr.models import video
-from rstr.mainviewer import MainViewer
+from kirinki.user import LoginForm
+from kirinki.config import Config
+from kirinki.common import ErrorClear
+from kirinki.models import streaming
+from kirinki.models import video
+from kirinki.mainviewer import MainViewer
 
 class StreamingView():
     def __init__(self, request):
-        logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
+        logging.basicConfig(filename='/var/log/kirinki.log',level=logging.DEBUG)
         messages.set_level(request, messages.INFO)
         if request.session.get('isConfig', False) is False:
             request.session.set_expiry(600)
@@ -31,13 +31,13 @@ class StreamingView():
             request.session['isConfig'] = True
         leftBlocks = []
         if not request.session['user'].is_authenticated():
-            leftBlocks = [render_to_string('rstr/section.html', {'title' : 'login', 'content': render_to_string('rstr/form.html', {'form' : LoginForm(), 'action' : request.session['base_url'] + '/login'}, context_instance=RequestContext(request))})]
+            leftBlocks = [render_to_string('kirinki/section.html', {'title' : 'login', 'content': render_to_string('kirinki/form.html', {'form' : LoginForm(), 'action' : request.session['base_url'] + '/login'}, context_instance=RequestContext(request))})]
 
         centerBlocks = []
         try:
             videoStr = streaming.objects.all()
             for video in videoStr:
-                centerBlocks = [render_to_string('rstr/section.html', {'title' : 'login', 'content': str(video.idStreaming)})]
+                centerBlocks = [render_to_string('kirinki/section.html', {'title' : 'login', 'content': str(video.idStreaming)})]
         except streaming.DoesNotExist:
             pass
         self.render = MainViewer(request).render(leftBlocks, [], [])
@@ -61,7 +61,7 @@ class StrForm(forms.Form):
 
 class StreamView():
     def __init__(self, request):
-        logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
+        logging.basicConfig(filename='/var/log/kirinki.log',level=logging.DEBUG)
         messages.set_level(request, messages.INFO)
         if request.session.get('isConfig', False) is False:
             request.session.set_expiry(600)
@@ -74,7 +74,7 @@ class StreamView():
             form.fields['srcIP'].initial = request.META['REMOTE_ADDR']
             form.fields['srcPort'].initial = 9000
             form.fields['vStream'].choices = self.userVideos(request)
-            self.render = MainViewer(request).render([], [render_to_string('rstr/form.html', {'form' : form, 'action' : request.session['base_url'] + '/stream', 'id' : 'stream'}, context_instance=RequestContext(request))], [])
+            self.render = MainViewer(request).render([], [render_to_string('kirinki/form.html', {'form' : form, 'action' : request.session['base_url'] + '/stream', 'id' : 'stream'}, context_instance=RequestContext(request))], [])
         elif request.method == 'POST':
             form = StrForm(request.POST, error_class=ErrorClear)
             form.fields['isVideo'].initial = False
@@ -146,7 +146,7 @@ class VideosView():
     VIEW = 1
     DELETE = 2
     def __init__(self, request, action=0, key=None):
-        logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
+        logging.basicConfig(filename='/var/log/kirinki.log',level=logging.DEBUG)
         messages.set_level(request, messages.INFO)
         if request.session.get('isConfig', False) is False:
             request.session.set_expiry(600)
@@ -155,11 +155,11 @@ class VideosView():
             request.session['isConfig'] = True
         leftBlocks = []
         if not request.session['user'].is_authenticated():
-            leftBlocks = [render_to_string('rstr/section.html', {'title' : 'login', 'content': render_to_string('rstr/form.html', {'form' : LoginForm(), 'action' : request.session['base_url'] + '/login'}, context_instance=RequestContext(request))})]
+            leftBlocks = [render_to_string('kirinki/section.html', {'title' : 'login', 'content': render_to_string('kirinki/form.html', {'form' : LoginForm(), 'action' : request.session['base_url'] + '/login'}, context_instance=RequestContext(request))})]
         else:
             try:
                 myVideos = video.objects.filter(owner = request.session['user'])
-                leftBlocks = [render_to_string('rstr/section.html', {'title' : 'Mis vídeos', 'content' : render_to_string('rstr/myVideo.html', {'videos' : myVideos, 'session' : request.session}).encode('utf-8')})]
+                leftBlocks = [render_to_string('kirinki/section.html', {'title' : 'Mis vídeos', 'content' : render_to_string('kirinki/myVideo.html', {'videos' : myVideos, 'session' : request.session}).encode('utf-8')})]
             except video.DoesNotExist:
                 pass
 
@@ -167,7 +167,7 @@ class VideosView():
         if action == self.LIST:
             try:
                 videoList = video.objects.all()
-                centerBlocks = [render_to_string('rstr/section.html', {'title' : 'Lista de videos', 'content': render_to_string('rstr/videoList.html', {'videos' : videoList, 'session' : request.session}).encode('utf-8')})]
+                centerBlocks = [render_to_string('kirinki/section.html', {'title' : 'Lista de videos', 'content': render_to_string('kirinki/videoList.html', {'videos' : videoList, 'session' : request.session}).encode('utf-8')})]
             except video.DoesNotExist:
                 pass
         elif action == self.VIEW:
@@ -177,7 +177,7 @@ class VideosView():
                     media = request.session['base_url'] + '/media/'
                     bfile = media + v.path[v.path.rfind('/')+1:v.path.rfind('.')]
                     src = {'ogv' : bfile + '.ogv', 'mp4' : bfile + '.mp4', 'webm' : bfile + '.webm', 'flash' : request.session['base_url'] + '/static/flowplayer/flowplayer-3.2.5.swf'}
-                    centerBlocks = [render_to_string('rstr/section.html', {'title' : v.name, 'content': render_to_string('rstr/video.html', {'controls' : True, 'src' : src})})]
+                    centerBlocks = [render_to_string('kirinki/section.html', {'title' : v.name, 'content': render_to_string('kirinki/video.html', {'controls' : True, 'src' : src})})]
                 except video.DoesNotExist:
                     pass
         elif action == self.DELETE:
@@ -212,7 +212,7 @@ class UploadForm(forms.Form):
 
 class UploadView():
     def __init__(self, request):
-        logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
+        logging.basicConfig(filename='/var/log/kirinki.log',level=logging.DEBUG)
         messages.set_level(request, messages.INFO)
         if request.session.get('isConfig', False) is False:
             request.session.set_expiry(600)
@@ -252,14 +252,14 @@ class UploadView():
         content = ''
         try:
             myVideos = video.objects.filter(owner = session['user'])
-            content = render_to_string('rstr/myVideo.html', {'videos' : myVideos, 'session' : session}).encode('utf-8')
+            content = render_to_string('kirinki/myVideo.html', {'videos' : myVideos, 'session' : session}).encode('utf-8')
         except video.DoesNotExist:
             pass
-        return render_to_string('rstr/section.html', {'title' : 'Mis vídeos', 'content' : content})
+        return render_to_string('kirinki/section.html', {'title' : 'Mis vídeos', 'content' : content})
 
     def getUploadVideo(self, base_url, request):
-        content = render_to_string('rstr/form.html', {'form' : UploadForm(request.POST, request.FILES, error_class=ErrorClear), 'action' : base_url + '/upload', 'upload' : True}, context_instance=RequestContext(request))
-        return render_to_string('rstr/section.html', {'title' : 'Subir vídeo', 'content' : content})
+        content = render_to_string('kirinki/form.html', {'form' : UploadForm(request.POST, request.FILES, error_class=ErrorClear), 'action' : base_url + '/upload', 'upload' : True}, context_instance=RequestContext(request))
+        return render_to_string('kirinki/section.html', {'title' : 'Subir vídeo', 'content' : content})
 
     def getRender(self):
         return self.render

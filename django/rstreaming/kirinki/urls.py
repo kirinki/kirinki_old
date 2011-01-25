@@ -5,7 +5,7 @@ __author__ = "Pablo Alvarez de Sotomayor Posadillo"
 # from django.views.decorators.cache import cache_page
 from django.conf.urls.defaults import *
 
-urlpatterns = patterns('rstr.views',
+urlpatterns = patterns('kirinki.views',
                        (r'^/*$', 'index'),
                        (r'^index/*$', 'index'),
                        (r'^/index/*$', 'index'),

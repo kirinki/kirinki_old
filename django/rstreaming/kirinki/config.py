@@ -5,13 +5,13 @@ __author__ = "Pablo Alvarez de Sotomayor Posadillo"
 from django.core.cache import cache
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.sessions.models import Session
-from rstr.models import configs
+from kirinki.models import configs
 import logging
 from datetime import datetime, timedelta
 
 class Config:
     def __init__(self, session):
-        logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
+        logging.basicConfig(filename='/var/log/kirinki.log',level=logging.DEBUG)
 
         if not cache.get('numUsers', False):
             cache.set('numUsers', 1)

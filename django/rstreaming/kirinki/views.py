@@ -11,9 +11,9 @@ from django.contrib.auth.decorators import user_passes_test
 # from django.views.decorators.vary import vary_on_headers
 # from django.views.decorators.cache import cache_control
 
-from rstr.index import IndexView
-from rstr.user import LoginView, LogoutView, RegisterView, ActivationView, AdminView, AccountView
-from rstr.videos import StreamingView, VideosView, StreamView, UploadView
+from kirinki.index import IndexView
+from kirinki.user import LoginView, LogoutView, RegisterView, ActivationView, AdminView, AccountView
+from kirinki.videos import StreamingView, VideosView, StreamView, UploadView
 
 # @vary_on_header s('Cookie')
 # @cache_control(private=True, must_revalidate=True, max_age=3600)

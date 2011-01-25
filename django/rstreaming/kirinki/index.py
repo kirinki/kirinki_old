@@ -7,13 +7,13 @@ from django.contrib import messages
 from django.template import RequestContext
 from django.template.loader import render_to_string
 
-from rstr.user import LoginForm
-from rstr.config import Config
-from rstr.mainviewer import MainViewer
+from kirinki.user import LoginForm
+from kirinki.config import Config
+from kirinki.mainviewer import MainViewer
 
 class IndexView():
     def __init__(self, request):
-        logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
+        logging.basicConfig(filename='/var/log/kirinki.log',level=logging.DEBUG)
         messages.set_level(request, messages.INFO)
         #request.session.clear()
         if request.session.get('isConfig', False) is False:
@@ -23,19 +23,19 @@ class IndexView():
             request.session['isConfig'] = True
         leftBlocks = []
         if not request.session['user'].is_authenticated():
-            leftBlocks = [render_to_string('rstr/section.html', {'title' : 'login', 'content': render_to_string('rstr/form.html', {'form' : LoginForm(), 'action' : request.session['base_url']+'/login'}, context_instance=RequestContext(request))})]
-        centerBlocks = [render_to_string('rstr/section.html', {'title' : 'Bienvenido', 'content' : '<p>Bienvenido a Ritho\'s Streaming, el sitio desde el cual podras hacer Streaming tanto en directo como en diferido de manera sencilla.</p>'})]
+            leftBlocks = [render_to_string('kirinki/section.html', {'title' : 'login', 'content': render_to_string('kirinki/form.html', {'form' : LoginForm(), 'action' : request.session['base_url']+'/login'}, context_instance=RequestContext(request))})]
+        centerBlocks = [render_to_string('kirinki/section.html', {'title' : 'Bienvenido', 'content' : '<p>Bienvenido a Ritho\'s Streaming, el sitio desde el cual podras hacer Streaming tanto en directo como en diferido de manera sencilla.</p>'})]
         rightBlocks = [self.generateArticles(), self.generateVideos()]
         self.render = MainViewer(request).render(leftBlocks, centerBlocks, rightBlocks)
 
     def generateArticles(self):
-        # article = render_to_string('rstr/article.html', {'title' : 'Inicio del proyecto', 'date' : '2010-12-01','abstract' : 'Con la inauguracion de esta oficial comienza su andadura el proyecto.', 'content' : 'Explicacion del proyecto RStreaming'})
-        # return render_to_string('rstr/section.html', {'title' : 'Ultimas noticias', 'content' : article})
+        # article = render_to_string('kirinki/article.html', {'title' : 'Inicio del proyecto', 'date' : '2010-12-01','abstract' : 'Con la inauguracion de esta oficial comienza su andadura el proyecto.', 'content' : 'Explicacion del proyecto RStreaming'})
+        # return render_to_string('kirinki/section.html', {'title' : 'Ultimas noticias', 'content' : article})
         return ''
 
     def generateVideos(self):
-        # videos = render_to_string('rstr/video.html', {'width' : '320', 'height' : '240', 'controls' : True, 'src': 'file:///home/i02sopop/Downloads/PiTP - 2009 - Monday, July 13, 2009 - Kernighan.hi.mp4'})
-        # return render_to_string('rstr/section.html', {'title' : 'Videos', 'content' : videos})
+        # videos = render_to_string('kirinki/video.html', {'width' : '320', 'height' : '240', 'controls' : True, 'src': 'file:///home/i02sopop/Downloads/PiTP - 2009 - Monday, July 13, 2009 - Kernighan.hi.mp4'})
+        # return render_to_string('kirinki/section.html', {'title' : 'Videos', 'content' : videos})
         return ''
 
 

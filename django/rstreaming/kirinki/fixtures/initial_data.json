@@ -1,6 +1,6 @@
 [
   {
-    "model": "rstr.configs",
+    "model": "kirinki.configs",
     "pk": null,
     "fields": {
       "cfgkey": "jquery_src",
@@ -8,15 +8,15 @@
     }
   },
   {
-    "model": "rstr.configs",
+    "model": "kirinki.configs",
     "pk": null,
     "fields": {
       "cfgkey": "jquery_file",
-      "cfgvalue": "rstreaming.js"
+      "cfgvalue": "kirinki.js"
     }
   },
   {
-    "model": "rstr.configs",
+    "model": "kirinki.configs",
     "pk": null,
     "fields": {
       "cfgkey": "css_file",
@@ -24,7 +24,7 @@
     }
   },
   {
-    "model": "rstr.configs",
+    "model": "kirinki.configs",
     "pk": null,
     "fields": {
       "cfgkey": "javascript_file",
@@ -32,15 +32,15 @@
     }
   },
   {
-    "model": "rstr.configs",
+    "model": "kirinki.configs",
     "pk": null,
     "fields": {
       "cfgkey": "title",
-      "cfgvalue": "Ritho's Streaming"
+      "cfgvalue": "Kirinki"
     }
   },
   {
-    "model": "rstr.configs",
+    "model": "kirinki.configs",
     "pk": null,
     "fields": {
       "cfgkey": "subtitle",
@@ -48,15 +48,15 @@
     }
   },
   {
-    "model": "rstr.configs",
+    "model": "kirinki.configs",
     "pk": null,
     "fields": {
       "cfgkey": "base_url",
-      "cfgvalue": "http://rstreaming.org"
+      "cfgvalue": "http://kirinki.net"
     }
   },
   {
-    "model": "rstr.configs",
+    "model": "kirinki.configs",
     "pk": null,
     "fields": {
       "cfgkey": "upload_path",
@@ -64,7 +64,7 @@
     }
   },
   {
-    "model": "rstr.configs",
+    "model": "kirinki.configs",
     "pk": null,
     "fields": {
       "cfgkey": "strIP",
@@ -72,7 +72,7 @@
     }
   },
   {
-    "model": "rstr.configs",
+    "model": "kirinki.configs",
     "pk": null,
     "fields": {
       "cfgkey": "strPort",

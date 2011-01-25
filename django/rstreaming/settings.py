@@ -1,10 +1,10 @@
-# Django settings for rstreaming project.
+# Django settings for kirinki project.
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    ('Pablo Alvarez de Sotomayor Posadillo', 'palvarez@ritho.net'),
+    ('Pablo Alvarez de Sotomayor Posadillo', 'palvarez@kirinki.net'),
 )
 
 MANAGERS = ADMINS
@@ -12,8 +12,8 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'rstreaming',                      # Or path to database file if using sqlite3.
-        'USER': 'i02sopop',                      # Not used with sqlite3.
+        'NAME': 'kirinki',                      # Or path to database file if using sqlite3.
+        'USER': 'kuser',                      # Not used with sqlite3.
         'PASSWORD': 'passwd',                  # Not used with sqlite3.
         'HOST': 'localhost',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
@@ -45,7 +45,7 @@ USE_L10N = True
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = '/home/i02sopop/desarrollo/rstreaming/django/rstreaming/upload/'
+MEDIA_ROOT = '/usr/src/rstreaming/django/rstreaming/upload/'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
@@ -90,7 +90,7 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    '/home/i02sopop/desarrollo/rstreaming/django/rstreaming/templates'
+    '/usr/src/rstreaming/django/rstreaming/templates'
     # 'templates'
 )
 
@@ -104,7 +104,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
-    'rstr',
+    'kirinki',
 )
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
@@ -112,9 +112,9 @@ SESSION_SAVE_EVERY_REQUEST = True
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 CACHE_BACKEND = 'memcached://127.0.0.1:21211/'
 MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
-EMAIL_HOST = 'turing.ritho.net'
+EMAIL_HOST = 'kirinki.net'
 EMAIL_PORT = '25'
-EMAIL_HOST_USER = 'rstr@ritho.net'
+EMAIL_HOST_USER = 'no-reply@kirinki.net'
 EMAIL_HOST_PASSWORD = ''
 EMAIL_USE_TLS = True
 DEFAULT_CHARSET = 'utf-8'

@@ -19,10 +19,10 @@ from django.template.loader import render_to_string
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Group
 
-from rstr.config import Config
-from rstr.common import ErrorClear
-from rstr.mainviewer import MainViewer
-from rstr.models import UserProfile
+from kirinki.config import Config
+from kirinki.common import ErrorClear
+from kirinki.mainviewer import MainViewer
+from kirinki.models import UserProfile
 
 class LoginForm(forms.Form):
     username = forms.CharField(label='username',
@@ -38,7 +38,7 @@ class LoginForm(forms.Form):
 class LoginView():
     def __init__(self, request):
         form = LoginForm(request.POST, error_class=ErrorClear)
-        logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
+        logging.basicConfig(filename='/var/log/kirinki.log',level=logging.DEBUG)
         messages.set_level(request, messages.INFO)
         if request.session.get('isConfig', False) is False:
             request.session.set_expiry(600)
@@ -48,10 +48,10 @@ class LoginView():
         if request.method == 'GET':
             centerBlocks = []
             if not request.session['user'].is_authenticated():
-                centerBlocks = [render_to_string('rstr/section.html', {'title' : 'Login', 'content': render_to_string('rstr/form.html', {'form' : form, 'action' : request.session['base_url']+'/login'}, context_instance=RequestContext(request))})]
+                centerBlocks = [render_to_string('kirinki/section.html', {'title' : 'Login', 'content': render_to_string('kirinki/form.html', {'form' : form, 'action' : request.session['base_url']+'/login'}, context_instance=RequestContext(request))})]
             self.render = MainViewer(request).render([],centerBlocks,[])
         elif request.method == 'POST':
-            logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
+            logging.basicConfig(filename='/var/log/kirinki.log',level=logging.DEBUG)
             logging.debug('Login POST')
             if request.session['user'].is_authenticated():
                 messages.add_message(request, messages.ERROR, 'User already logged in')
@@ -127,7 +127,7 @@ class RegisterForm(forms.Form):
 
 class RegisterView():
     def __init__(self, request):
-        logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
+        logging.basicConfig(filename='/var/log/kirinki.log',level=logging.DEBUG)
         form = RegisterForm(request.POST, error_class=ErrorClear)
         if request.session.get('isConfig', False) is False:
             messages.set_level(request, messages.INFO)
@@ -138,9 +138,9 @@ class RegisterView():
         if request.method == 'GET':
             centerBlocks = []
             if not request.session['user'].is_authenticated():
-                centerBlocks = [render_to_string('rstr/section.html',
+                centerBlocks = [render_to_string('kirinki/section.html',
                                                  {'title' : 'Register',
-                                                  'content': render_to_string('rstr/form.html', {'form' : form, 'action' : request.session['base_url']+'/register', 'captcha' : captcha.displayhtml('6LefRr8SAAAAAMncFelaGsop60Uuon0MCL6H-aP3')},
+                                                  'content': render_to_string('kirinki/form.html', {'form' : form, 'action' : request.session['base_url']+'/register', 'captcha' : captcha.displayhtml('6LefRr8SAAAAAMncFelaGsop60Uuon0MCL6H-aP3')},
                                                                               context_instance=RequestContext(request))})]
             self.render = MainViewer(request).render([],centerBlocks,[])
         elif request.method == 'POST':
@@ -181,7 +181,7 @@ class RegisterView():
                             email_body = "Hello, %s, and thanks for signing up for an rstreaming account!\n\nTo activate your account, click this link within 48 hours:\n\n%s/account/confirm/%s" % (user.username, request.session['base_url'], new_profile.activation_key)
                             send_mail(email_subject,
                                       email_body,
-                                      'rstr@ritho.net',
+                                      'no-reply@kirinki.net',
                                       [user.email.encode('utf-8')],
                                       fail_silently=False)
 
@@ -230,7 +230,7 @@ class LogoutView():
 
 class ActivationView():
     def __init__(self, request, key):
-        logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
+        logging.basicConfig(filename='/var/log/kirinki.log',level=logging.DEBUG)
         try:
             logging.debug(key)
             up = UserProfile.objects.get(activation_key=key)
@@ -256,7 +256,7 @@ class ActivationView():
 
 class AdminView():
     def __init__(self, request):
-        logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
+        logging.basicConfig(filename='/var/log/kirinki.log',level=logging.DEBUG)
         messages.set_level(request, messages.INFO)
         if request.session.get('isConfig', False) is False:
             request.session.set_expiry(600)
@@ -270,7 +270,7 @@ class AdminView():
 
 class AccountView():
     def __init__(self, request):
-        logging.basicConfig(filename='/var/log/rstreaming.log',level=logging.DEBUG)
+        logging.basicConfig(filename='/var/log/kirinki.log',level=logging.DEBUG)
         messages.set_level(request, messages.INFO)
         if request.session.get('isConfig', False) is False:
             request.session.set_expiry(600)
