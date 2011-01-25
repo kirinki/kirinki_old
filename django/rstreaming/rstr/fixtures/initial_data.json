@@ -78,5 +78,12 @@
       "cfgkey": "strPort",
       "cfgvalue": "9000"
     }
+  },
+  {
+    "model": "auth.group",
+    "pk": null,
+    "fields": {
+      "name": "users"
+    }
   }
 ]
