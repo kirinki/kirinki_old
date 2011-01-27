@@ -4,7 +4,7 @@
     "pk": null,
     "fields": {
       "cfgkey": "jquery_src",
-      "cfgvalue": "jqyery.js"
+      "cfgvalue": "jquery.js"
     }
   },
   {
@@ -52,7 +52,7 @@
     "pk": null,
     "fields": {
       "cfgkey": "base_url",
-      "cfgvalue": "http://kirinki.net"
+      "cfgvalue": "http://turing.ritho.net"
     }
   },
   {
@@ -60,7 +60,7 @@
     "pk": null,
     "fields": {
       "cfgkey": "upload_path",
-      "cfgvalue": "/usr/src/rstreaming/django/rstreaming/upload"
+      "cfgvalue": "/home/i02sopop/desarrollo/rstreaming/django/rstreaming/upload"
     }
   },
   {
