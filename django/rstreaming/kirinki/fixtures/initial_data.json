@@ -52,7 +52,7 @@
     "pk": null,
     "fields": {
       "cfgkey": "base_url",
-      "cfgvalue": "http://devel.kirinki.net"
+      "cfgvalue": "http://kirinki.net"
     }
   },
   {
