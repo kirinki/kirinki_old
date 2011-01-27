@@ -2,7 +2,7 @@
 __license__ = "GNU General Public License, Ver.3"
 __author__ = "Pablo Alvarez de Sotomayor Posadillo"
 
-import sha
+import hashlib
 import random
 import logging
 from datetime import datetime, timedelta
