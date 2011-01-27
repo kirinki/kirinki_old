@@ -52,7 +52,7 @@
     "pk": null,
     "fields": {
       "cfgkey": "base_url",
-      "cfgvalue": "http://turing.ritho.net"
+      "cfgvalue": "http://devel.kirinki.net"
     }
   },
   {
@@ -60,7 +60,7 @@
     "pk": null,
     "fields": {
       "cfgkey": "upload_path",
-      "cfgvalue": "/home/i02sopop/desarrollo/rstreaming/django/rstreaming/upload"
+      "cfgvalue": "/usr/src/rstreaming/django/rstreaming/upload"
     }
   },
   {
