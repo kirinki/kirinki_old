@@ -4,6 +4,7 @@
 
 <form action="{{ action|default_if_none:'' }}" method="post" {% if upload %} enctype="multipart/form-data" {% endif%} {% if id %} id="{{ id }}" {% endif%}>
   {% csrf_token %}
+  {% comment %} Resolver ataques CSRF. Fuente: http://nealpoole.com/blog/2010/11/preventing-csrf-attacks-with-ajax-and-http-headers/ {% endcomment %}
   {% for hidden in form.hidden_fields %}
   {{ hidden }}
   {% endfor %}
