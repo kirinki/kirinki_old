@@ -19,6 +19,15 @@
    <source src="{{ src.ogv }}" type="video/ogg" />
    {% endif %}
 
+   {% if src.orig %}
+   <a href="{{ src.orig }}" title="video" id="video"/>
+   <script type="javascript">
+   flowplayer("video", "/static/flowplayer/flowplayer-3.2.5.swf", {
+   clip: {autoPlay: false, autoBuffering: true},
+   logo: {fullscreenOnly: true}});
+   </script>
+   {% endif %}
+
    {% if src.flash %}
    <object {% if width %} width="{{ width }}" {% endif %} 
 	   {% if height %} height="{{ height }}" {% endif %}

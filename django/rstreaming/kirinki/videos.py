@@ -5,6 +5,7 @@ __author__ = "Pablo Alvarez de Sotomayor Posadillo"
 import os
 import logging
 import subprocess
+import httplib
 from datetime import datetime
 
 from django import forms
@@ -174,9 +175,15 @@ class VideosView():
             if key is not None:
                 try:
                     v = video.objects.get(idVideo=key)
-                    media = request.session['base_url'] + '/media/'
-                    bfile = media + v.path[v.path.rfind('/')+1:v.path.rfind('.')]
-                    src = {'ogv' : bfile + '.ogv', 'mp4' : bfile + '.mp4', 'webm' : bfile + '.webm', 'flash' : request.session['base_url'] + '/static/flowplayer/flowplayer-3.2.5.swf'}
+                    bfile = '/media/'+v.path[v.path.rfind('/')+1:v.path.rfind('.')]
+                    src = {'orig' : request.session['base_url'] + v.path}
+                    if self.exists(request.session['base_url'],bfile+'.ogv'):
+                        src['ogv'] = request.session['base_url'] +bfile+'.ogv'
+                    if self.exists(request.session['base_url'],bfile+'.mp4'):
+                        src['mp4'] = request.session['base_url'] +bfile+'.mp4'
+                    if self.exists(request.session['base_url'],bfile+'.webm'):
+                        src['webm'] = request.session['base_url'] +bfile+'.webm'
+                    src['flash'] = request.session['base_url']+'/static/flowplayer/flowplayer-3.2.5.swf'
                     centerBlocks = [render_to_string('kirinki/section.html', {'title' : v.name, 'content': render_to_string('kirinki/video.html', {'controls' : True, 'src' : src})})]
                 except video.DoesNotExist:
                     pass
@@ -197,6 +204,16 @@ class VideosView():
 
     def getRender(self):
         return self.render
+
+    def exists(self,url,video):
+        conn = httplib.HTTPConnection(url,80)
+        conn.request('HEAD', video)
+        r1 = conn.getresponse()
+        conn.close()
+        if r1.status == 200:
+            return True
+        else:
+            return False
 
 class UploadForm(forms.Form):
     title = forms.CharField(label='Título',
