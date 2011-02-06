@@ -171,7 +171,7 @@ class RegisterController():
                                                       key_expires=key_expires)
                             new_profile.save()
                             
-                            email_subject = 'Ritho\'s Streaming account confirmation'
+                            email_subject = 'Kirinki account confirmation'
                             email_body = "Hello, %s, and thanks for signing up for an rstreaming account!\n\nTo activate your account, click this link within 48 hours:\n\n%s/account/confirm/%s" % (user.username, request.session['base_url'], new_profile.activation_key)
                             send_mail(email_subject,
                                       email_body,

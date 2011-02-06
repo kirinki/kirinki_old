@@ -21,7 +21,7 @@ class IndexController():
         leftBlocks = []
         if not request.session['user'].is_authenticated():
             leftBlocks = [render_to_string('kirinki/section.html', {'title' : 'login', 'content': render_to_string('kirinki/form.html', {'form' : LoginForm(), 'action' : request.session['base_url']+'/login'}, context_instance=RequestContext(request))})]
-        centerBlocks = [render_to_string('kirinki/section.html', {'title' : 'Bienvenido', 'content' : '<p>Bienvenido a Ritho\'s Streaming, el sitio desde el cual podras hacer Streaming tanto en directo como en diferido de manera sencilla.</p>'})]
+        centerBlocks = [render_to_string('kirinki/section.html', {'title' : 'Bienvenido', 'content' : '<p>Bienvenido a Kirinki, el sitio desde el cual podras hacer Streaming tanto en directo como en diferido de manera sencilla.</p>'})]
         rightBlocks = [self.generateArticles(), self.generateVideos()]
         self.render = MainViewer(request).render(leftBlocks, centerBlocks, rightBlocks)
 
