@@ -2,25 +2,22 @@
 __license__ = "GNU General Public License, Ver.3"
 __author__ = "Pablo Alvarez de Sotomayor Posadillo"
 
-import logging
+# Django imports
 from django.contrib import messages
 from django.template import RequestContext
 from django.template.loader import render_to_string
 
+# Application imports
 from kirinki.user import LoginForm
 from kirinki.config import Config
 from kirinki.mainviewer import MainViewer
 
-class IndexView():
+class IndexController():
+    '''Class to implement the Index controller'''
     def __init__(self, request):
-        logging.basicConfig(filename='/var/log/kirinki.log',level=logging.DEBUG)
-        messages.set_level(request, messages.INFO)
         #request.session.clear()
         if request.session.get('isConfig', False) is False:
-            request.session.set_expiry(600)
-            data = Config(request.session).getSessionData()
-            request.session.update(data)
-            request.session['isConfig'] = True
+            Config.getSession(request.session)
         leftBlocks = []
         if not request.session['user'].is_authenticated():
             leftBlocks = [render_to_string('kirinki/section.html', {'title' : 'login', 'content': render_to_string('kirinki/form.html', {'form' : LoginForm(), 'action' : request.session['base_url']+'/login'}, context_instance=RequestContext(request))})]

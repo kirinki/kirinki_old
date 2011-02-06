@@ -2,14 +2,11 @@
 {% load cache %}
 {% get_current_language as LANGUAGE_CODE %}
 
-<video id="vSel" preload="none"
+{% if src.webm or src.ogv or src.mp4 %}
+<video id="movie" preload="none"
        {% if width %} width="{{ width }}" {% endif %} 
        {% if height %} height="{{ height }}" {% endif %}
        {% if controls %} controls="controls" {% endif %} >
-
-   {% if src.mp4 %}
-   <source src="{{ src.mp4 }}" type="video/mp4" />
-   {% endif %}
 
    {% if src.webm %}
    <source src="{{ src.webm }}" type="video/webm" />
@@ -19,34 +16,27 @@
    <source src="{{ src.ogv }}" type="video/ogg" />
    {% endif %}
 
-   {% if src.orig %}
-   <a href="{{ src.orig }}" title="video" id="video"/>
-   <script type="javascript">
-   flowplayer("video", "/static/flowplayer/flowplayer-3.2.5.swf", {
-   clip: {autoPlay: false, autoBuffering: true},
-   logo: {fullscreenOnly: true}});
-   </script>
-   {% endif %}
-
-   {% if src.flash %}
-   <object {% if width %} width="{{ width }}" {% endif %} 
-	   {% if height %} height="{{ height }}" {% endif %}
-	   type="application/x-shockwave-flash"
-	   data="player.swf">
-     <param name="movie" value="{{ src.flash }}" />
-   </object>
+   {% if src.mp4 %}
+   <source src="{{ src.mp4 }}" type="video/mp4" />
    {% endif %}
 </video>
+{% else %}
+<a id="sVideo" style="width:500px;height:320px;display:block"></a>
+<script language="JavaScript">
+flowplayer("sVideo",
+"{{ src.flash }}", {
+// this will enable pseudostreaming support 
+plugins: { 
+pseudo: { url: '{{ src.flash_str }}' } 
+},
 
-<script type="text/javascript">
+// clip properties 
+clip: {
+// our clip uses pseudostreaming
+provider: 'pseudo',
+// provide MP4 file for Flash version 9.0.115 and above. otherwise use FLV
+url: flashembed.isSupported([9, 115]) ? '{{ src.mp4 }}' : '{{ src.flv }}'
+}
+});
 </script>
-
-<p><strong>Download Video:</strong>
-  {% if src.mp4 %}
-  Closed Format: <a href="{{ src.mp4 }}">"mp4"</a>
-  {% endif %}
-
-  {% if src.ogv %}
-  Open Format: <a href="src.ogv">"Ogg"</a>
-  {% endif %}
-</p>
+{% endif %}

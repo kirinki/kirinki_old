@@ -11,57 +11,63 @@ from django.contrib.auth.decorators import user_passes_test
 # from django.views.decorators.vary import vary_on_headers
 # from django.views.decorators.cache import cache_control
 
-from kirinki.index import IndexView
-from kirinki.user import LoginView, LogoutView, RegisterView, ActivationView, AdminView, AccountView
-from kirinki.videos import StreamingView, VideosView, StreamView, UploadView
+from kirinki.index import IndexController
+from kirinki.user import LoginController, LogoutController, RegisterController, ActivationController, AdminController, AccountController
+from kirinki.videos import StreamingController, VideoController, StreamController, UploadController
 
 # @vary_on_header s('Cookie')
 # @cache_control(private=True, must_revalidate=True, max_age=3600)
 @never_cache
 @vary_on_cookie
-def index(request):
-    return IndexView(request).getRender()
+def indexView(request):
+    return IndexController(request).getRender()
 
 @user_passes_test(lambda u: u.is_anonymous(),'index')
-def auth_login(request):
-    return LoginView(request).getRender()
+def loginView(request):
+    return LoginController(request).getRender()
     
 @user_passes_test(lambda u: u.is_authenticated(),'index')
-def auth_logout(request):
-    return LogoutView(request).getRender()
+def logoutView(request):
+    return LogoutController(request).getRender()
 
 @user_passes_test(lambda u: u.is_anonymous(),'index')
-def reg(request):
-    return RegisterView(request).getRender()
+def registerView(request):
+    return RegisterController(request).getRender()
 
 @user_passes_test(lambda u: u.is_anonymous(),'index')
-def activate(request, key):
-    return ActivationView(request, key).getRender()
+def activateView(request, key):
+    return ActivationController(request, key).getRender()
 
-def streaming(request):
-    return StreamingView(request).getRender()
+def streamingView(request):
+    return StreamingController(request).getRender()
 
-def videos(request):
-    return VideosView(request).getRender()
+def referenceStreamingView(request):
+    return StreamingController(request).getRender()
 
-def viewVideo(request,key):
-    return VideosView(request,VideosView.VIEW,key).getRender()
+def videosView(request):
+    return VideoController(request).getRender()
 
-def deleteVideo(request,key):
-    return VideosView(request,VideosView.DELETE,key).getRender()
+def viewVideoView(request,key):
+    return VideoController(request,VideoController.VIEW,key).getRender()
+
+def deleteVideoView(request,key):
+    return VideoController(request,VideoController.DELETE,key).getRender()
+
+def ReferenceVideoView(request,key):
+    return VideoController(request,VideoController.REFERENCE,key).getRender()
 
 @user_passes_test(lambda u: u.is_authenticated(),'index')
-def stream(request):
-    return StreamView(request).getRender()
+def streamView(request):
+    return StreamController(request).getRender()
 
 @user_passes_test(lambda u: u.is_authenticated(),'index')
-def upload(request):
-    return UploadView(request).getRender()
+def uploadView(request):
+    return UploadController(request).getRender()
 
 @user_passes_test(lambda u: u.is_superuser,'index')
-def admin(request):
-    return AdminView(request).getRender()
+def adminView(request):
+    return AdminController(request).getRender()
 
 @user_passes_test(lambda u: u.is_authenticated(),'index')
-def account(request):
-    return AccountView(request).getRender()
+def accountView(request):
+    return AccountController(request).getRender()

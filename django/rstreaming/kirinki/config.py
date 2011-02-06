@@ -2,17 +2,23 @@
 __license__ = "GNU General Public License, Ver.3"
 __author__ = "Pablo Alvarez de Sotomayor Posadillo"
 
+# Python general imports
+from datetime import datetime, timedelta
+
+# Django imports
 from django.core.cache import cache
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.sessions.models import Session
+
+# Application imports
 from kirinki.models import configs
-import logging
-from datetime import datetime, timedelta
+from kirinki.log import Log
 
 class Config:
-    def __init__(self, session):
-        logging.basicConfig(filename='/var/log/kirinki.log',level=logging.DEBUG)
+    '''Class to load and store the site config from/to the database to/from the session'''
 
+    @staticmethod
+    def getSession(session):
         if not cache.get('numUsers', False):
             cache.set('numUsers', 1)
         else:
@@ -23,12 +29,12 @@ class Config:
             session['user'] = AnonymousUser()
 
         cfgs = configs.objects.all()
+        data = {}
         for cfg in cfgs:
-            logging.debug(cfg.cfgkey)
-            logging.debug(cfg.cfgvalue)
-            session[cfg.cfgkey.encode('utf-8')] = cfg.cfgvalue.encode('utf-8')
+            Log().debug(cfg.cfgkey)
+            Log().debug(cfg.cfgvalue)
+            data[cfg.cfgkey.encode('utf-8')] = cfg.cfgvalue.encode('utf-8')
 
-        self.data = session
-
-    def getSessionData(self):
-        return self.data
+        session.set_expiry(int(data.get('session_expiry',1200)))
+        session.update(data)
+        session['isConfig'] = True

@@ -2,38 +2,40 @@
 __license__ = "GNU General Public License, Ver.3"
 __author__ = "Pablo Alvarez de Sotomayor Posadillo"
 
+# Python general imports
 import os
-import logging
+import os.path
 import subprocess
 import httplib
 from datetime import datetime
 
+# Django imports
 from django import forms
 from django.http import HttpResponse, HttpResponseRedirect
-from django.contrib import messages
 from django.template import RequestContext
 from django.template.loader import render_to_string
 
-from kirinki.user import LoginForm
+# Application imports
 from kirinki.config import Config
 from kirinki.common import ErrorClear
+from kirinki.mainviewer import MainViewer
 from kirinki.models import streaming
 from kirinki.models import video
-from kirinki.mainviewer import MainViewer
+from kirinki.message import Message
+from kirinki.user import LoginForm
 
-class StreamingView():
+class StreamingController():
+    '''Class that implements the Streaming controller'''
     def __init__(self, request):
-        logging.basicConfig(filename='/var/log/kirinki.log',level=logging.DEBUG)
-        messages.set_level(request, messages.INFO)
         if request.session.get('isConfig', False) is False:
-            request.session.set_expiry(600)
-            data = Config(request.session).getSessionData()
-            request.session.update(data)
-            request.session['isConfig'] = True
+            Config.getSession(request.session)
+
+        # Left block
         leftBlocks = []
         if not request.session['user'].is_authenticated():
             leftBlocks = [render_to_string('kirinki/section.html', {'title' : 'login', 'content': render_to_string('kirinki/form.html', {'form' : LoginForm(), 'action' : request.session['base_url'] + '/login'}, context_instance=RequestContext(request))})]
 
+        # Center block
         centerBlocks = []
         try:
             videoStr = streaming.objects.all()
@@ -41,9 +43,11 @@ class StreamingView():
                 centerBlocks = [render_to_string('kirinki/section.html', {'title' : 'login', 'content': str(video.idStreaming)})]
         except streaming.DoesNotExist:
             pass
-        self.render = MainViewer(request).render(leftBlocks, [], [])
+        
+        self.render = MainViewer(request).render(leftBlocks, centerBlocks, [])
 
     def getRender(self):
+        '''This method return the html rendered'''
         return self.render
 
 class StrForm(forms.Form):
@@ -60,34 +64,37 @@ class StrForm(forms.Form):
                                 choices=[],
                                 required=True)
 
-class StreamView():
+class StreamController():
+    '''Class to implement the Stream controller'''
+    
     def __init__(self, request):
-        logging.basicConfig(filename='/var/log/kirinki.log',level=logging.DEBUG)
-        messages.set_level(request, messages.INFO)
         if request.session.get('isConfig', False) is False:
-            request.session.set_expiry(600)
-            data = Config(request.session).getSessionData()
-            request.session.update(data)
-            request.session['isConfig'] = True
+            Config.getSession(request.session)
+
         if request.method == 'GET':
+            # GET request
             form = StrForm(error_class=ErrorClear)
             form.fields['isVideo'].initial = False
             form.fields['srcIP'].initial = request.META['REMOTE_ADDR']
             form.fields['srcPort'].initial = 9000
             form.fields['vStream'].choices = self.userVideos(request)
             self.render = MainViewer(request).render([], [render_to_string('kirinki/form.html', {'form' : form, 'action' : request.session['base_url'] + '/stream', 'id' : 'stream'}, context_instance=RequestContext(request))], [])
+            
         elif request.method == 'POST':
+            # POST request
             form = StrForm(request.POST, error_class=ErrorClear)
             form.fields['isVideo'].initial = False
             form.fields['srcIP'].initial = request.META['REMOTE_ADDR']
             form.fields['srcPort'].initial = 9000
             form.fields['vStream'].choices = self.userVideos(request)
 
+            # Check if the form data is valid and try to start the streaming
             if form.is_valid():
                 try:
                     v = video.objects.filter(idVideo=form.cleaned_data['vStream'])[0]
                 except video.DoesNotExist:
                     v = None
+                    
                 if form.cleaned_data['isVideo'] is True and v is not None:
                     clvc = None
                     if v.format == 'video/mp4':
@@ -100,28 +107,28 @@ class StreamView():
                         cvlc = subprocess.Popen(["/usr/bin/cvlc " + v.path + " --sout '#http{mux=ogg,dst=" + request.session['strIP'] + ":" + request.session['strPort'] + "/} -no-sout-rtp-sap -no-sout-standard-sap -sout-keep' --ttl 12"],
                                                 shell=True)
                     else:
-                        messages.add_message(request, messages.ERROR, 'Video type not supported')
+                        Message.pushMessage(request, Message.ERROR,'Video type not supported')
 
                     if clvc is not None:
                         vStream = streaming(src=form.cleaned_data['srcIP'], port=form.cleaned_data['srcPort'], mux=form.cleaned_data['srcMux'], vMode=form.cleaned_data['isVideo'], pid=cvlc.pid,video=v, owner=request.session['user'])
                         vStream.save()
-                        messages.add_message(request, messages.INFO, 'Video streaming')
+                        Message.pushMessage(request, Message.INFO,'Video streaming')
                 elif form.cleaned_data['isVideo'] is False:
                     if form.cleaned_data['srcMux'] != "ffmpeg{mux=flv}" and form.cleaned_data['srcMux'] != "webm" and form.cleaned_data['srcMux'] != "ogg":
-                        messages.add_message(request, messages.ERROR, 'Video type not supported')
+                        Message.pushMessage(request, Message.ERROR,'Video type not supported')
                     else:
                         cvlc = subprocess.Popen(["/usr/bin/cvlc http://" + str(form.cleaned_data['srcIP']) + ":" + str(form.cleaned_data['srcPort']) + " --sout '#http{mux=" + str(form.cleaned_data['srcMux']) + ",dst=" + request.session['strIP'] + ":" + request.session['strPort'] + "/} -no-sout-rtp-sap -no-sout-standard-sap -sout-keep' --ttl 12"],
                                                 shell=True)
                         vStream = streaming(src=form.cleaned_data['srcIP'], port=form.cleaned_data['srcPort'], mux=form.cleaned_data['srcMux'], vMode=form.cleaned_data['isVideo'], pid=cvlc.pid,video=v, owner=request.session['user'])
                         vStream.save()
-                        messages.add_message(request, messages.ERROR, 'External video streaming.')
+                        Message.pushMessage(request, Message.ERROR, 'External video streaming.')
                 else:
-                    messages.add_message(request, messages.ERROR, 'If you select the video mode you must select a video.')
+                    Message.pushMessage(request, Message.ERROR, 'If you select the video mode you must select a video.')
                 # os.waitpid(p.pid, 0)[1]
                 self.render = HttpResponseRedirect('/streaming')
             else:
                 for error in form.errors:
-                    messages.add_message(request, messages.ERROR, 'Error en ' + error + ': ' + str(form._errors[error]))
+                    Message.pushMessage(request, Message.ERROR, 'Error en ' + error + ': ' + str(form._errors[error]))
                 if request.META.get('HTTP_REFERER', False) is not False:
                     self.render = HttpResponseRedirect(request.META['HTTP_REFERER'])
                 else:
@@ -130,6 +137,7 @@ class StreamView():
             raise Http404
 
     def userVideos(self, request):
+        '''This method return the videos owned by the actual user.'''
         init = []
         try:
             videos = video.objects.filter(owner=request.session['user'])
@@ -140,20 +148,22 @@ class StreamView():
         return init
 
     def getRender(self):
+        '''This method return the html rendered'''
         return self.render
 
-class VideosView():
+class VideoController():
+    '''Class to implement the Video controller'''
+
     LIST = 0
     VIEW = 1
     DELETE = 2
+    REFERENCE = 3
+
     def __init__(self, request, action=0, key=None):
-        logging.basicConfig(filename='/var/log/kirinki.log',level=logging.DEBUG)
-        messages.set_level(request, messages.INFO)
         if request.session.get('isConfig', False) is False:
-            request.session.set_expiry(600)
-            data = Config(request.session).getSessionData()
-            request.session.update(data)
-            request.session['isConfig'] = True
+            Config.getSession(request.session)
+
+        # Blocks assigned to the left area
         leftBlocks = []
         if not request.session['user'].is_authenticated():
             leftBlocks = [render_to_string('kirinki/section.html', {'title' : 'login', 'content': render_to_string('kirinki/form.html', {'form' : LoginForm(), 'action' : request.session['base_url'] + '/login'}, context_instance=RequestContext(request))})]
@@ -164,6 +174,7 @@ class VideosView():
             except video.DoesNotExist:
                 pass
 
+        # Blocks assigned to the center area
         centerBlocks = []
         if action == self.LIST:
             try:
@@ -176,15 +187,18 @@ class VideosView():
                 try:
                     v = video.objects.get(idVideo=key)
                     bfile = '/media/'+v.path[v.path.rfind('/')+1:v.path.rfind('.')]
-                    src = {'orig' : request.session['base_url'] + v.path}
-                    if self.exists(request.session['base_url'],bfile+'.ogv'):
+                    src = {'orig' : request.session['base_url'] + '/media/'+v.path[v.path.rfind('/')+1:]}
+                    if os.path.exists(v.path[:v.path.rfind('.')]+'.ogv'):
                         src['ogv'] = request.session['base_url'] +bfile+'.ogv'
-                    if self.exists(request.session['base_url'],bfile+'.mp4'):
-                        src['mp4'] = request.session['base_url'] +bfile+'.mp4'
-                    if self.exists(request.session['base_url'],bfile+'.webm'):
+                    if os.path.exists(v.path[:v.path.rfind('.')]+'.webm'):
                         src['webm'] = request.session['base_url'] +bfile+'.webm'
+                    if os.path.exists(v.path[:v.path.rfind('.')]+'.mp4'):
+                        src['mp4'] = request.session['base_url'] +bfile+'.mp4'
+                    if os.path.exists(v.path[:v.path.rfind('.')]+'.flv'):
+                        src['flv'] = request.session['base_url'] +bfile+'.flv'
                     src['flash'] = request.session['base_url']+'/static/flowplayer/flowplayer-3.2.5.swf'
-                    centerBlocks = [render_to_string('kirinki/section.html', {'title' : v.name, 'content': render_to_string('kirinki/video.html', {'controls' : True, 'src' : src})})]
+                    src['flash_str'] = request.session['base_url']+'/static/flowplayer.pseudostreaming/flowplayer.pseudostreaming-3.2.5.swf'
+                    centerBlocks = [render_to_string('kirinki/section.html', {'title' : v.name, 'content': render_to_string('kirinki/video.html', {'controls' : True, 'src' : src, 'width' : '400', 'height' : '400'})})]
                 except video.DoesNotExist:
                     pass
         elif action == self.DELETE:
@@ -196,24 +210,21 @@ class VideosView():
                     centerBlocks = ['<p>Video ' + name + ' deleted.</p>']
                 except video.DoesNotExist:
                     pass
+        elif action == self.REFERENCE:
+            pass
+        else:
+            # Error. Action not defined
+            raise Http404
 
+        # Blocks assigned to the right area
         # Ultimos subidos, ultimos usuarios que han subido, usuarios que mas han subido, ...
         rightBlocks = []
 
         self.render = MainViewer(request).render(leftBlocks, centerBlocks, rightBlocks)
 
     def getRender(self):
+        '''This method returns the html generated'''
         return self.render
-
-    def exists(self,url,video):
-        conn = httplib.HTTPConnection(url,80)
-        conn.request('HEAD', video)
-        r1 = conn.getresponse()
-        conn.close()
-        if r1.status == 200:
-            return True
-        else:
-            return False
 
 class UploadForm(forms.Form):
     title = forms.CharField(label='Título',
@@ -226,21 +237,23 @@ class UploadForm(forms.Form):
                                   required=True)
     fileUpload = forms.FileField(label='Fichero',
                                  required=True)
+    convert = forms.BooleanField(label='Convertir',
+                                 required=True)
 
-class UploadView():
+class UploadController():
+    '''Class to implement the Upload controller. This class will be merged with the VideoController'''
     def __init__(self, request):
-        logging.basicConfig(filename='/var/log/kirinki.log',level=logging.DEBUG)
-        messages.set_level(request, messages.INFO)
         if request.session.get('isConfig', False) is False:
-            request.session.set_expiry(600)
-            data = Config(request.session).getSessionData()
-            request.session.update(data)
-            request.session['isConfig'] = True
+            Config.getSession(request.session)
+
         if request.method == 'GET':
+            # GET request
             leftBlocks = [self.getMyVideos(request.session)]
             centerBlocks = [self.getUploadVideo(request.session['base_url'], request)]
             self.render = MainViewer(request).render(leftBlocks, centerBlocks, [])
+            
         elif request.method == 'POST':
+            # POST request.
             form = UploadForm(request.POST, request.FILES, error_class=ErrorClear)
             if form.is_valid():
                 upFile = request.FILES['fileUpload']
@@ -255,9 +268,10 @@ class UploadView():
                     destination.close()
                     v = video(name=form.cleaned_data['title'], description=form.cleaned_data['description'], path=path, format=upFile.content_type, pub_date=datetime.now(), owner=request.session['user'])
                     v.save()
+                    # if form.cleaned_data['convert']:
             else:
                 for error in form.errors:
-                    messages.add_message(request, messages.ERROR, 'Error en ' + error + ': ' + str(form._errors[error]))
+                    Message.pushMessage(request, Message.ERROR, 'Error en ' + error + ': ' + str(form._errors[error]))
             if request.META.get('HTTP_REFERER', False) is not False:
                 self.render = HttpResponseRedirect(request.META['HTTP_REFERER'])
             else:
@@ -266,6 +280,7 @@ class UploadView():
             raise Http404
 
     def getMyVideos(self, session):
+        '''This method return the videos owned by the actual user.'''
         content = ''
         try:
             myVideos = video.objects.filter(owner = session['user'])
@@ -279,4 +294,5 @@ class UploadView():
         return render_to_string('kirinki/section.html', {'title' : 'Subir vídeo', 'content' : content})
 
     def getRender(self):
+        '''This method returns the html generated'''
         return self.render
