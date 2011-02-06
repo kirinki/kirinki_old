@@ -33,12 +33,16 @@
     font-style: normal;
 }
 
-html body {
+html, body {
     font-family: "TeX Gyre Schola", "Palatino", "Hoefler Text", "Georgia", "Times New Roman", "Baskerville", serif;
     font-size: 1em;
+    min-width: 1280px;
 }
 
-.afs-droid-sans-mono { font-family: "Droid Sans Mono", Menlo, Courier New, Courier, Mono, monospace; font-size: 0.869em;}
+code {
+    font-family: "Droid Sans Mono", Menlo, Courier New, Courier, Mono, monospace;
+    font-size: 0.869em;
+}
 
 h1 {
     font-size: 2em;
@@ -83,7 +87,7 @@ ul.hmenu li a {
     margin: 0;
     background-color: #def;
     margin-left: 3px;
-    padding: 5px;
+    padding: 1px 6px;
     border-radius: 7px;
     -webkit-border-radius: 7px;
     -moz-border-radius: 7px;
