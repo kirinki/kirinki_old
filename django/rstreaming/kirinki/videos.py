@@ -154,6 +154,7 @@ class StreamController():
 class VideoController():
     '''Class to implement the Video controller'''
 
+    # Definition of the video actions
     LIST = 0
     VIEW = 1
     DELETE = 2
