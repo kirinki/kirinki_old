@@ -199,7 +199,7 @@ class VideoController():
                         src['flv'] = request.session['base_url'] +bfile+'.flv'
                     src['flash'] = request.session['base_url']+'/static/flowplayer/flowplayer-3.2.5.swf'
                     src['flash_str'] = request.session['base_url']+'/static/flowplayer.pseudostreaming/flowplayer.pseudostreaming-3.2.5.swf'
-                    centerBlocks = [render_to_string('kirinki/section.html', {'title' : v.name, 'content': render_to_string('kirinki/video.html', {'controls' : True, 'src' : src, 'width' : '400', 'height' : '400'})})]
+                    centerBlocks = [render_to_string('kirinki/section.html', {'title' : v.name, 'content': render_to_string('kirinki/video.html', {'controls' : True, 'src' : src})})]
                 except video.DoesNotExist:
                     pass
         elif action == self.DELETE:
@@ -238,8 +238,12 @@ class UploadForm(forms.Form):
                                   required=True)
     fileUpload = forms.FileField(label='Fichero',
                                  required=True)
-    convert = forms.BooleanField(label='Convertir',
-                                 required=True)
+    convertMP4 = forms.BooleanField(label='Convertir a mp4',
+                                    required=False)
+    convertOGG = forms.BooleanField(label='Convertir a ogg',
+                                    required=False)
+    convertWEBM = forms.BooleanField(label='Convertir a webm',
+                                     required=False)
 
 class UploadController():
     '''Class to implement the Upload controller. This class will be merged with the VideoController'''
@@ -269,7 +273,14 @@ class UploadController():
                     destination.close()
                     v = video(name=form.cleaned_data['title'], description=form.cleaned_data['description'], path=path, format=upFile.content_type, pub_date=datetime.now(), owner=request.session['user'])
                     v.save()
-                    # if form.cleaned_data['convert']:
+                    if form.cleaned_data['convertMP4'] and path[v.path.rfind('.'):].lower() != 'mp4':
+                        pass
+                    if form.cleaned_data['convertOGG'] and path[v.path.rfind('.'):].lower() != 'ogg':
+                        pass
+                    if form.cleaned_data['convertWEBM'] and path[v.path.rfind('.'):].lower() != 'web':
+                        pass
+                    if path[v.path.rfind('.'):].lower() != 'flv':
+                        pass
             else:
                 for error in form.errors:
                     Message.pushMessage(request, Message.ERROR, 'Error en ' + error + ': ' + str(form._errors[error]))

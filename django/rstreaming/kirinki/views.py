@@ -53,7 +53,7 @@ def viewVideoView(request,key):
 def deleteVideoView(request,key):
     return VideoController(request,VideoController.DELETE,key).getRender()
 
-def ReferenceVideoView(request,key):
+def referenceVideoView(request,key):
     return VideoController(request,VideoController.REFERENCE,key).getRender()
 
 @user_passes_test(lambda u: u.is_authenticated(),'index')

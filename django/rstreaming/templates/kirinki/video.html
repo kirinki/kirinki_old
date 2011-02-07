@@ -2,24 +2,49 @@
 {% load cache %}
 {% get_current_language as LANGUAGE_CODE %}
 
+<script type="text/javascript" charset="utf-8">
+  // Add VideoJS to all video tags on the page when the DOM is ready
+  VideoJS.setupAllWhenReady();
+</script>
+
 {% if src.webm or src.ogv or src.mp4 %}
-<video id="movie" preload="none"
-       {% if width %} width="{{ width }}" {% endif %} 
-       {% if height %} height="{{ height }}" {% endif %}
-       {% if controls %} controls="controls" {% endif %} >
+<div class="video-js-box">
+  <video class="video-js" id="movie" preload="none"
+	 {% if width %} width="{{ width }}" {% endif %} 
+	 {% if height %} height="{{ height }}" {% endif %}
+	 {% if controls %} controls="controls" {% endif %} 
+	 preload poster="" >
 
-   {% if src.webm %}
-   <source src="{{ src.webm }}" type="video/webm" />
-   {% endif %}
+    {% if src.webm %}
+    <source src="{{ src.webm }}" type='video/webm; codecs="vp8, vorbis"' />
+    {% endif %}
 
-   {% if src.ogv %}
-   <source src="{{ src.ogv }}" type="video/ogg" />
-   {% endif %}
+    {% if src.ogv %}
+    <source src="{{ src.ogv }}" type='video/ogg; codecs="theora, vorbis"'' />
+    {% endif %}
 
-   {% if src.mp4 %}
-   <source src="{{ src.mp4 }}" type="video/mp4" />
-   {% endif %}
-</video>
+    {% if src.mp4 %}
+    <source src="{{ src.mp4 }}" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"' />
+    {% endif %}
+
+    <object class="vjs-flash-fallback"
+	    {% if width %} width="{{ width }}" {% endif %} 
+	    {% if height %} height="{{ height }}" {% endif %}
+	    type="application/x-shockwave-flash"
+            data="{{ src.flash }}">
+        <param name="movie" value="{{ src.flash }}" />
+        <param name="allowfullscreen" value="true" />
+	{% if src.mp4 %}
+        <param name="flashvars" value='config={"playlist":[{"url":"{{ src.mp4 }}","autoPlay":false,"autoBuffering":true}]}' />
+	{% else %}
+        <param name="flashvars" value='config={"playlist":[{"url":"{{ src.flv }}","autoPlay":false,"autoBuffering":true}]}' />
+	{% endif %}
+        <img src="" {% if width %} width="{{ width }}" {% endif %} 
+	     {% if height %} height="{{ height }}" {% endif %}
+	     alt="Poster Image" title="No video playback capabilities." />
+    </object>
+  </video>
+</div>
 {% else %}
 <a id="sVideo" style="width:500px;height:320px;display:block"></a>
 <script language="JavaScript">
@@ -34,8 +59,7 @@ pseudo: { url: '{{ src.flash_str }}' }
 clip: {
 // our clip uses pseudostreaming
 provider: 'pseudo',
-// provide MP4 file for Flash version 9.0.115 and above. otherwise use FLV
-url: flashembed.isSupported([9, 115]) ? '{{ src.mp4 }}' : '{{ src.flv }}'
+url: '{{ src.flv }}'
 }
 });
 </script>
