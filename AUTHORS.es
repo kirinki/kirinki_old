@@ -15,7 +15,7 @@ en kirinki@kirinki.net.
 
  Desarrolladores principales:
 ------------------------------
-Pablo Álvarez de Sotomayor Posadillo	<palvarez@ritho.net> http://ritho.net
+Pablo Álvarez de Sotomayor Posadillo	<palvarez@kirinki.net>
 
  Contribuidores significantes:
 -------------------------------
