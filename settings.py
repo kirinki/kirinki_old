@@ -76,7 +76,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.gzip.GZipMiddleware',
 )
 
-ROOT_URLCONF = 'rstreaming.urls'
+ROOT_URLCONF = 'kirinki.urls'
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.auth",
