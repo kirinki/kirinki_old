@@ -1,4 +1,4 @@
- Contribuciones al proyecto rstreaming
+ Contribuciones al proyecto Kirinki
 =======================================
 
 Actualmente hay seis vías principales de contribuir al proyecto
