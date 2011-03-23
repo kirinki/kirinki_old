@@ -1,9 +1,9 @@
- rstreaming -  Ritho's streaming
-==================================
+ Kirinki
+=========
 
-rstreaming es un servidor de streaming que permite emitir videos
-en directo desde cualquier sitio con conexion a internet. Las
-características más importantes son:
+Kirinki es tanto un servidor de streaming como una aplicación web que
+permite emitir videos en directo desde cualquier sitio con una
+conexión basica a internet. Las características más importantes son:
 
 - Streaming de vídeo desde cualquier parte del mundo con un ancho de
   banda limitado.
@@ -54,8 +54,8 @@ de este documento.
 ============
 El desarrollo de este proyecto se realiza utilizando el sistema de
 gestión de versiones distribuido git, y su repositorio se puede
-encontrar en git://git.ritho.net/rstreaming.git. Si quiere participar en el
+encontrar tanto en git://git.ritho.net/kirinki.git como en
+https://github.com/i02sopop/Kirinki.git. Si quiere participar en el
 desarrollo del proyecto, ya sea aportando código, documentación o
 cualquier otro tipo de soporte, lea primero detenidamente el documento
-CONTRIBUTE y, en caso de duda, consulte con rstreaming@ritho.net.
-
+CONTRIBUTE y, en caso de duda, consulte con kirinki@kirinki.net.

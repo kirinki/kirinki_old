@@ -1,10 +1,12 @@
- rstreaming -  Ritho's streaming
-=================================
+ Kirinki
+=========
 
-rstreaming is a streaming server that allows live video streaming from
-any place with Internet connection. The main features are:
+Kirinki is both a streaming server and a web application that allows
+live video streaming from any place with a basic Internet
+connection. The main features are:
 
-- Video streaming from any part of the world with a limited broadband.
+- Video streaming from any part of the world with a basic Internet
+  connection.
 - Video recording directly to the net, allowing the access to the
   video as soon as the video is recorded.
 - Streaming of videos stored in the website in cyclical mode or in one
@@ -48,8 +50,9 @@ discovered please see the development section in this document.
  Development
 =============
 The development of this project use the distributed revision control
-system git, and you can find the repository on
-git://git.ritho.net/rstreaming.git. If you want to colaborate in the
-project, either developing code, writing documentation or any other
-type of task please read first the CONTRIBUTE file and, in case of
-doubt, please contact with rstreaming@ritho.net.
+system git, and you can find the repository both on
+git://git.ritho.net/kirinki.git and on
+https://github.com/i02sopop/Kirinki.git. If you want to colaborate in
+the project, either developing code, writing documentation or any
+other type of task please read first the CONTRIBUTE file and, in case
+of doubt, please contact with kirinki@kirinki.net.
