@@ -1,0 +1,9 @@
+Server streaming process:
+
+1.- Start the client and configure the camera and the microphone.
+2.- Configure the image and sound restoration.
+3.- Configure the image and sound enhacement.
+4.- Configure the connection with the server (ip, port, image & sound
+quality, identification, ...).
+5.- Start/pause/stop streaming.
+6.- Quit client.
