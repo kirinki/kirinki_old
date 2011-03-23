@@ -21,6 +21,12 @@ proyecto.
 
  Licencia
 ==========
+Este proyecto tiene dos licencias, una para el servidor de streaming
+(kserver), la GNU GPL, y otra para la aplicación web (kirinki), la GNU
+AGPL.
+
+ Licencia de kserver
+=====================
 Este programa es software libre: puedes redistribuirlo y/o modificalo
 bajo los términos de la Licencia Pública General de GNU tal y como la
 publica la Free Software Foundation bajo la versión 3 o posterior de
@@ -33,6 +39,22 @@ Licencia Pública General de GNU para mas detalles.
 
 Debe de haber recibido una copia de la Licencia Pública General de GNU
 junto con este programa. En caso contrario, visite
+<http://www.gnu.org/licenses/>.
+
+ Licencia de kirinki
+=====================
+Este programa es software libre: puedes redistribuirlo y/o modificalo
+bajo los términos de la Licencia Pública General Affero de GNU tal y
+como la publica la Free Software Foundation bajo la versión 3 o
+posterior de la Licencia.
+
+Este programa se distribuye con la esperanza de que resulte útil, pero
+SIN NINGUNA GARANTÍA, incluyendo la garantía implícita de
+COMERCIABILIDAD o IDONEIDAD PARA UN PROPÓSITO PARTICULAR. Compruebe la
+Licencia Pública General Affero de GNU para mas detalles.
+
+Debe de haber recibido una copia de la Licencia Pública General Affero
+de GNU junto con este programa. En caso contrario, visite
 <http://www.gnu.org/licenses/>.
 
  Instalación
