@@ -1,11 +1,11 @@
  Contribuciones al proyecto Kirinki
 =======================================
 
-Actualmente hay seis vías principales de contribuir al proyecto
-kirinki. La primera de ellas es probar el programa e informar de todos
-aquellos errores que se hayan descubierto. Si has descubierto algún
-fallo en el programa y quieres informar de ello, por favor, visita la
-sección Testers de este documento.
+Actualmente hay varias maneras de contribuir al proyecto kirinki. La
+primera de ellas es probar el programa e informar de todos aquellos
+errores que se hayan descubierto. Si has descubierto algún fallo en el
+programa y quieres informar de ello, por favor, visita la sección
+Testers de este documento.
 
 La siguiente manera de colaborar con el proyecto es donar algo de
 dinero para ayudar a mantener el proyecto. Éste dinero se puede
@@ -29,10 +29,9 @@ Administradores en este documento.
 
 Y, finalmente, si lo que quiere es ayudar desarrollando código para el
 proyecto, por favor, visite la sección de Desarrolladores en este
-documento.
-
-Si encuentra alguna otra forma de colaborar con el proyecto, por
-favor, contacte con kirinki@kirinki.net exponiendo su idea.
+documento. Si encuentra alguna otra forma de colaborar con el
+proyecto, por favor, contacte con kirinki@kirinki.net exponiendo su
+idea.
 
  Testers
 =========
