@@ -50,3 +50,9 @@ idea.
 
  Desarrolladores
 =================
+Hay una lista para desarrolladores en developers@lists.kirinki.net.
+Hay una lista donde todos los mensajes de commit se envian en
+commits@lists.kirinki.net.
+Puedes subscribirte a cualquiera de las listas en
+https://lists.kirinki.net.
+
