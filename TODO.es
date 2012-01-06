@@ -1,5 +1,9 @@
 Lista de cosas por hacer en el proyecto:
 
+* Sistema de tests
+* Web oficial
+* WIki
+* Documentacion
 * Implementar rstr/stream
 * Implementar rstr/streaming
 * Implementar rstr/account
