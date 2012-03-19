@@ -1,3 +1,4 @@
 *.ods diff=odf
 *.odt diff=odf
 *.odp diff=odf
+*.png diff=exif
